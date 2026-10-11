@@ -21,8 +21,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import koneksi.koneksi;
-import fileyanggkkepake.menu_absenGuru;
-import fileyanggkkepake.menu_tranksaksi;
 
 /**
  *
@@ -60,12 +58,10 @@ private Connection conn = new koneksi().getConnection();
     setFixedIcon(menuguru, "/resource/guru.png");
     setFixedIcon(menusiswa, "/resource/murid.png");
     setFixedIcon(jdwl,"/resource/jadwal.png");
-    setFixedIcon(absenuser,"/resource/user.png");
-    setFixedIcon(absenguru,"/resource/logoguru.png");
     sethome(home,"/resource/home.png");
     setleave(keluar,"/resource/keluar.png");
     setadmin(admin,"/resource/admin.png");
-    lblWelcome.setText("Selamat Datang, " + UserSession.getNama());
+    lblWelcome.setText("Selamat Datang, ");
     validasiMenu();
     tampilkanHomeAwal();
     }
@@ -73,19 +69,16 @@ private Connection conn = new koneksi().getConnection();
     
     public void validasiMenu() {
     String role = UserSession.getLevel(); 
-    
-    if (role.equals("2")) { 
+    if (role == null) {
+        return; 
+    }else if (role.equals("2")) { 
         menukelas.setEnabled(false);
         menusiswa.setEnabled(false);
         menuguru.setEnabled(false);
         jdwl.setEnabled(false);
         admin.setEnabled(false);
-        absenuser.setEnabled(false);
-        absenguru.setEnabled(false);
     } else if (role.equals("3")) {
         admin.setEnabled(false); 
-        absenuser.setEnabled(false);
-        absenguru.setEnabled(false);
     }
 }
     
@@ -301,8 +294,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
         menuguru = new javax.swing.JButton();
         keluar = new javax.swing.JButton();
         jdwl = new javax.swing.JButton();
-        absenguru = new javax.swing.JButton();
-        absenuser = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -449,40 +440,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
             }
         });
 
-        absenguru.setFont(new java.awt.Font("Segoe UI Symbol", 1, 14)); // NOI18N
-        absenguru.setForeground(new java.awt.Color(255, 255, 255));
-        absenguru.setText("Absen Guru");
-        absenguru.setToolTipText("");
-        absenguru.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        absenguru.setFocusPainted(false);
-        absenguru.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                absenguruMouseClicked(evt);
-            }
-        });
-        absenguru.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                absenguruActionPerformed(evt);
-            }
-        });
-
-        absenuser.setFont(new java.awt.Font("Segoe UI Symbol", 1, 14)); // NOI18N
-        absenuser.setForeground(new java.awt.Color(255, 255, 255));
-        absenuser.setText("Absen User");
-        absenuser.setToolTipText("");
-        absenuser.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        absenuser.setFocusPainted(false);
-        absenuser.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                absenuserMouseClicked(evt);
-            }
-        });
-        absenuser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                absenuserActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -494,9 +451,7 @@ private void setadmin(javax.swing.JButton btn, String path) {
                     .addComponent(menusiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(menuguru, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(keluar, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                    .addComponent(jdwl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(absenguru, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(absenuser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jdwl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -510,11 +465,7 @@ private void setadmin(javax.swing.JButton btn, String path) {
                 .addComponent(menuguru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jdwl, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(absenuser, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(absenguru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
                 .addComponent(keluar)
                 .addContainerGap())
         );
@@ -648,48 +599,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
         }
     }//GEN-LAST:event_jdwlActionPerformed
 
-    private void absenguruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_absenguruActionPerformed
-    desktop.removeAll();
-    desktop.repaint();
-
-    menu_absenGuru mu = new menu_absenGuru();
-
-    desktop.add(mu);
-
-    mu.setVisible(true);
-    
-    try {
-        mu.setMaximum(true);
-    } catch (java.beans.PropertyVetoException e) {
-        System.err.println("Gagal memaksimalkan Internal Frame: " + e.getMessage());
-    }
-    }//GEN-LAST:event_absenguruActionPerformed
-
-    private void absenguruMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_absenguruMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_absenguruMouseClicked
-
-    private void absenuserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_absenuserMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_absenuserMouseClicked
-
-    private void absenuserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_absenuserActionPerformed
-     desktop.removeAll();
-    desktop.repaint();
-    
-    menu_absenUser mu = new menu_absenUser();
-    
-    desktop.add(mu);
-    
-    mu.setVisible(true);
-    
-    try {
-        mu.setMaximum(true);
-        } catch (java.beans.PropertyVetoException e) {
-            System.err.println("Gagal memaksimalkan Internal Frame: " + e.getMessage());
-        }
-    }//GEN-LAST:event_absenuserActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -708,8 +617,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton absenguru;
-    private javax.swing.JButton absenuser;
     private javax.swing.JButton admin;
     private javax.swing.JDesktopPane desktop;
     private javax.swing.JButton home;

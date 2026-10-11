@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.table.DefaultTableModel;
 import koneksi.koneksi;
-import guru.pop_guru;
+import pengaturandatabase.pop_guru;
 
 /**
  *

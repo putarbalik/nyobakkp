@@ -21,6 +21,20 @@ private DefaultTableModel tabmode;
     /**
    
      */
+     private void pasangIkon(javax.swing.JButton tombol, String pathGbr) {
+        try {
+            java.net.URL lokasi = getClass().getResource(pathGbr);
+            if (lokasi != null) {
+                java.awt.Image img = new javax.swing.ImageIcon(lokasi).getImage();
+                java.awt.Image ukuranBaru = img.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
+                tombol.setIcon(new javax.swing.ImageIcon(ukuranBaru));
+            } else {
+                System.err.println("GAMBAR HILANG: " + pathGbr);
+            }
+        } catch (Exception e) {
+            System.err.println("GAGAL RENDER GAMBAR: " + e.getMessage());
+        }
+    }
     public menu_siswa() {
     initComponents();
     javax.swing.plaf.basic.BasicInternalFrameUI ui = (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
@@ -31,24 +45,11 @@ private DefaultTableModel tabmode;
     } catch (Exception e) {
     }
 
-    bsimpan.setIcon(new ImageIcon(
-    new ImageIcon(getClass().getResource("/resource/save.png"))
-        .getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
-
-bubah.setIcon(new ImageIcon(
-    new ImageIcon(getClass().getResource("/resource/edit.png"))
-        .getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
-
-bhapus.setIcon(new ImageIcon(
-    new ImageIcon(getClass().getResource("/resource/delete.png"))
-        .getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
-
-bbatal.setIcon(new ImageIcon(
-    new ImageIcon(getClass().getResource("/resource/reset.png"))
-        .getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
-bcari.setIcon(new ImageIcon(
-    new ImageIcon(getClass().getResource("/resource/search.png"))
-        .getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
+    pasangIkon(bsimpan, "/resource/save.png");
+pasangIkon(bubah, "/resource/edit.png");
+pasangIkon(bhapus, "/resource/delete.png");
+pasangIkon(bbatal, "/resource/reset.png");
+pasangIkon(bcari, "/resource/search.png");
 
     bsimpan.setBackground(new java.awt.Color(34, 197, 94));
     bsimpan.setForeground(java.awt.Color.WHITE);
@@ -173,6 +174,12 @@ if (cbkls.getItemCount() > 0) {
     }
 }
    private void loadJurusan() {
+    // TAMBAHKAN 4 BARIS INI
+    if (con == null) {
+        System.err.println("Koneksi DB terputus, lewati loadJurusan.");
+        return;
+    }
+    
     try {
         String sql = "SELECT DISTINCT SUBSTRING_INDEX(kelas, '-', -1) AS jurusan FROM tbl_kelas";
         PreparedStatement pst = con.prepareStatement(sql);
@@ -181,9 +188,9 @@ if (cbkls.getItemCount() > 0) {
         cbjurusan.removeAllItems();
         cbjurusan.addItem("-- Pilih Jurusan --");
 
-while (rs.next()) {
-    cbjurusan.addItem(rs.getString("jurusan"));
-}
+        while (rs.next()) {
+            cbjurusan.addItem(rs.getString("jurusan"));
+        }
 
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Gagal load jurusan: " + e);

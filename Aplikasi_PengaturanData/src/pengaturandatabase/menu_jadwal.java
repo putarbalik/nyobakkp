@@ -15,7 +15,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.table.DefaultTableModel;
 import koneksi.koneksi;
-import guru.pop_guru;
 import static pengaturandatabase.frm_jadwal.txkg;
 
 /**
