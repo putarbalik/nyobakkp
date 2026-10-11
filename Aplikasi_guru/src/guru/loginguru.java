@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package guru;
-
-import kesiswaan.dashboardkesiswaan;
 import java.awt.Image;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,7 +12,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import koneksi.koneksi;
-import guru.GuruSession;
 /**
  *
  * @author ACER
@@ -305,9 +302,17 @@ String sql ="SELECT g.nip_g, g.nama, g.kd_guru, g.jkel, k.kelas " +
     }//GEN-LAST:event_passKeyPressed
 
     private void kembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kembaliActionPerformed
-        running.database_running dr = new running.database_running();
-    kembali.setVisible(true);
-    this.dispose(); 
+        int pilihan = JOptionPane.showConfirmDialog(
+        this,
+        "Apakah Anda yakin ingin keluar dari aplikasi Guru?",
+        "Konfirmasi Keluar",
+        JOptionPane.YES_NO_OPTION
+    );
+
+    if (pilihan == JOptionPane.YES_OPTION) {
+        this.dispose();
+        System.exit(0);
+    } 
     }//GEN-LAST:event_kembaliActionPerformed
 
     private void nipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nipActionPerformed

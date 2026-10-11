@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package guru;
-import fileyanggkkepake.menu_tranksaksi;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -18,14 +17,6 @@ import javax.swing.table.DefaultTableModel;
  * @author User
  */
 public class pop_up_siswa extends javax.swing.JFrame {
-
-  private menu_tranksaksi parentForm;
-
-    public pop_up_siswa(menu_tranksaksi parent) {
-        initComponents();
-        this.parentForm = parent;
-        datatable();
-    }
     public pop_up_siswa() {
         initComponents();
         datatable();
@@ -164,17 +155,13 @@ protected void datatable() {
     }//GEN-LAST:event_txtcariKeyPressed
 
     private void tblsiswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblsiswaMouseClicked
-    int baris = tblsiswa.getSelectedRow();
-        
-        String nisn = tblsiswa.getValueAt(baris, 0).toString();
-        String namaSiswa = tblsiswa.getValueAt(baris, 1).toString();
-        String kelasSiswa = tblsiswa.getValueAt(baris, 2).toString(); 
-   
-        if (parentForm != null) {
-            parentForm.setSiswa(nisn, namaSiswa, kelasSiswa);
-        }
-        this.dispose();
-    
+   int baris = tblsiswa.getSelectedRow();
+
+    String nisn = tblsiswa.getValueAt(baris, 0).toString();
+    String namaSiswa = tblsiswa.getValueAt(baris, 1).toString();
+    String kelasSiswa = tblsiswa.getValueAt(baris, 2).toString();
+
+    this.dispose();
     }//GEN-LAST:event_tblsiswaMouseClicked
 
     /**

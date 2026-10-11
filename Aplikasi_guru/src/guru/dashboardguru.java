@@ -10,8 +10,6 @@ import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import koneksi.koneksi;
-import pengaturandatabase.UserSession;
-import pengaturandatabase.menu_nilai;
 /**
  *
  * @author User
@@ -385,7 +383,6 @@ for (JInternalFrame frame : desktop.getAllFrames()) {
     int pilih = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin logout?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
     
     if (pilih == JOptionPane.YES_OPTION) {
-        UserSession.setNama(null);
         GuruSession.setNama(null); // Tambahkan ini
             GuruSession.setNip(null);
         this.dispose(); 
