@@ -59,7 +59,6 @@ private Connection conn = new koneksi().getConnection();
     setFixedIcon(menukelas, "/resource/class.png");
     setFixedIcon(menuguru, "/resource/guru.png");
     setFixedIcon(menusiswa, "/resource/murid.png");
-    setFixedIcon(tranksaksi, "/resource/tranksaksi.png");
     setFixedIcon(jdwl,"/resource/jadwal.png");
     setFixedIcon(absenuser,"/resource/user.png");
     setFixedIcon(absenguru,"/resource/logoguru.png");
@@ -84,7 +83,6 @@ private Connection conn = new koneksi().getConnection();
         absenuser.setEnabled(false);
         absenguru.setEnabled(false);
     } else if (role.equals("3")) {
-        tranksaksi.setEnabled(false);
         admin.setEnabled(false); 
         absenuser.setEnabled(false);
         absenguru.setEnabled(false);
@@ -301,7 +299,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
         menusiswa = new javax.swing.JButton();
         menukelas = new javax.swing.JButton();
         menuguru = new javax.swing.JButton();
-        tranksaksi = new javax.swing.JButton();
         keluar = new javax.swing.JButton();
         jdwl = new javax.swing.JButton();
         absenguru = new javax.swing.JButton();
@@ -430,18 +427,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
             }
         });
 
-        tranksaksi.setFont(new java.awt.Font("Segoe UI Symbol", 1, 14)); // NOI18N
-        tranksaksi.setForeground(new java.awt.Color(255, 255, 255));
-        tranksaksi.setText("Transaksi");
-        tranksaksi.setToolTipText("");
-        tranksaksi.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        tranksaksi.setFocusPainted(false);
-        tranksaksi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tranksaksiActionPerformed(evt);
-            }
-        });
-
         keluar.setBackground(new java.awt.Color(255, 0, 0));
         keluar.setText("Logout");
         keluar.setToolTipText("");
@@ -509,7 +494,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
                     .addComponent(menusiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(menuguru, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(keluar, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                    .addComponent(tranksaksi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jdwl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(absenguru, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(absenuser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -518,21 +502,19 @@ private void setadmin(javax.swing.JButton btn, String path) {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(menukelas, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(menusiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(menuguru, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jdwl, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tranksaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(menukelas, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addComponent(menusiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(absenuser, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(absenguru, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(menuguru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jdwl, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(absenuser, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(absenguru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addComponent(keluar)
                 .addContainerGap())
         );
@@ -593,23 +575,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
             System.err.println("Gagal memaksimalkan Internal Frame: " + e.getMessage());
         }
     }//GEN-LAST:event_menuguruActionPerformed
-
-    private void tranksaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tranksaksiActionPerformed
-   desktop.removeAll();
-    desktop.repaint();
-
-    menu_tranksaksi mt = new menu_tranksaksi();
-
-    desktop.add(mt);
-
-    mt.setVisible(true);
-    
-    try {
-        mt.setMaximum(true);
-        } catch (java.beans.PropertyVetoException e) {
-            System.err.println("Gagal memaksimalkan Internal Frame: " + e.getMessage());
-        }
-    }//GEN-LAST:event_tranksaksiActionPerformed
 
     private void keluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keluarActionPerformed
     int pilih = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin logout?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
@@ -758,6 +723,5 @@ private void setadmin(javax.swing.JButton btn, String path) {
     private javax.swing.JButton menuguru;
     private javax.swing.JButton menukelas;
     private javax.swing.JButton menusiswa;
-    private javax.swing.JButton tranksaksi;
     // End of variables declaration//GEN-END:variables
 }
