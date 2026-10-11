@@ -5,7 +5,7 @@
  */
 package kesiswaan;
 
-import guru.*;
+import kesiswaan.*;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,6 +37,11 @@ ResultSet rs;
         initComponents();
         javax.swing.plaf.basic.BasicInternalFrameUI ui = (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
     ui.setNorthPane(null);
+        // Bungkus seluruh isi form dengan scroll pane
+    javax.swing.JScrollPane scrollUtama = new javax.swing.JScrollPane(getContentPane());
+    scrollUtama.setBorder(null);
+    scrollUtama.getVerticalScrollBar().setUnitIncrement(16);
+    setContentPane(scrollUtama);
         loadcombo();
         kosong();
         aktif();
@@ -67,7 +72,13 @@ ResultSet rs;
     
     protected void datatable(){
     String[] baris = {"ID", "NISN", "Nama Siswa", "Tanggal", "Kategori", "Poin", "Keterangan"};
-    tabmode = new DefaultTableModel(null, baris);
+    tabmode = new DefaultTableModel(null, baris) {
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        // Mengembalikan false agar semua kolom tidak bisa diketik / diedit saat aplikasi running
+        return false; 
+    }
+  };
     tblpelanggaran.setModel(tabmode);
 
     String cariitem = txtcarisiswa.getText().trim();
@@ -300,8 +311,22 @@ ResultSet rs;
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane3.setViewportView(tblpelanggaran);
+        if (tblpelanggaran.getColumnModel().getColumnCount() > 0) {
+            tblpelanggaran.getColumnModel().getColumn(0).setResizable(false);
+            tblpelanggaran.getColumnModel().getColumn(1).setResizable(false);
+            tblpelanggaran.getColumnModel().getColumn(2).setResizable(false);
+            tblpelanggaran.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -329,7 +354,7 @@ ResultSet rs;
                     .addComponent(txtcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         bbatal.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N

@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package kesiswaan;
-import pengaturandatabase.menu_nilai;
 import java.awt.Image;
 import java.beans.PropertyVetoException;
 import javax.swing.JOptionPane;
@@ -30,9 +29,7 @@ public class dashboardkesiswaan extends javax.swing.JFrame {
         // Teks diketik manual (hardcode)
         lab_login.setText("SELAMAT DATANG, GURU BK"); 
         
-        setFixedIcon(babsen,"/resource/absen.png");
         sethome(home,"/resource/home.png");
-        setFixedIcon(bnilai,"/resource/nilai.png");
         setleave(logout,"/resource/keluar.png");
     }
     
@@ -403,12 +400,12 @@ for (JInternalFrame frame : desktop.getAllFrames()) {
 
     private void bnilaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnilaiActionPerformed
     desktop.removeAll();
-    menu_nilai mn = new menu_nilai();
+    menu_PelanggaranSiswa ps = new menu_PelanggaranSiswa();
 
-    desktop.add(mn);
-    mn.setVisible(true);
+    desktop.add(ps);
+    ps.setVisible(true);
     try {
-        mn.setMaximum(true);
+        ps.setMaximum(true);
         } catch (java.beans.PropertyVetoException e) {
             System.err.println("Gagal memaksimalkan Internal Frame: " + e.getMessage());
         }

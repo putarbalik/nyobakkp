@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package kesiswaan;
-import guru.*;
+import kesiswaan.*;
 import java.sql.Connection;
 import koneksi.koneksi;
 
