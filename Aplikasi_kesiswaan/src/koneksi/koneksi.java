@@ -24,7 +24,7 @@ public static Connection con;
         public static Connection getConnection(){
             if (connection == null) {
                 MysqlDataSource data = new MysqlDataSource();
-                data.setDatabaseName("dbsekolah_test");
+                data.setDatabaseName("dbschool_test");
                 data.setUser("root");
                 data.setPassword("");
                 try{
