@@ -71,65 +71,59 @@ ResultSet rs;
     }
     
     protected void datatable(){
-    String[] baris = {"ID", "NIS", "Nama Siswa", "Tanggal", "Kategori", "Keterangan"};
-    tabmode = new DefaultTableModel(null, baris) {
-    @Override
-    public boolean isCellEditable(int row, int column) {
-        // Mengembalikan false agar semua kolom tidak bisa diketik / diedit saat aplikasi running
-        return false; 
-    }
-  };
-    tblpelanggaran.setModel(tabmode);
+        String[] baris = {"NIS", "Nama Siswa", "Tanggal", "Kategori", "Keterangan"};
+        tabmode = new DefaultTableModel(null, baris) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; 
+            }
+        };
+        tblpelanggaran.setModel(tabmode);
 
-    String cariitem = txtcarisiswa.getText().trim();
-    
-    try {
-        String sql = "SELECT p.id_pelanggaran, p.nisn, s.nama, p.tgl_pelanggaran, " +
-                     "k.nama_kategori, p.keterangan " +
-                     "FROM tbl_pelanggaran p " +
-                     "JOIN tbl_siswa s ON p.nisn = s.nisn " +
-                     "JOIN tbl_kategori_pelanggaran k ON p.id_kategori = k.id_kategori " +
-                     "WHERE p.nisn LIKE ? OR s.nama LIKE ? " +
-                     "ORDER BY p.tgl_pelanggaran DESC, p.id_pelanggaran DESC";
+        String cariitem = txtcarisiswa.getText().trim();
+        
+        try {
+            // SQL Baru: Menghapus JOIN ke tbl_kategori_pelanggaran
+            String sql = "SELECT p.id_pelanggaran, p.nisn, s.nama, p.tgl_pelanggaran, " +
+                         "p.kategori_pelanggaran, p.keterangan " +
+                         "FROM tbl_pelanggaran p " +
+                         "JOIN tbl_siswa s ON p.nisn = s.nisn " +
+                         "WHERE p.nisn LIKE ? OR s.nama LIKE ? " +
+                         "ORDER BY p.tgl_pelanggaran DESC, p.id_pelanggaran DESC";
 
-        PreparedStatement stat = con.prepareStatement(sql);
-        stat.setString(1, "%" + cariitem + "%");
-        stat.setString(2, "%" + cariitem + "%");
+            PreparedStatement stat = con.prepareStatement(sql);
+            stat.setString(1, "%" + cariitem + "%");
+            stat.setString(2, "%" + cariitem + "%");
 
-        ResultSet hasil = stat.executeQuery();
+            ResultSet hasil = stat.executeQuery();
 
-        while (hasil.next()) {
-            tabmode.addRow(new Object[]{
-                hasil.getInt("id_pelanggaran"),
-                hasil.getString("nisn"),
-                hasil.getString("nama"),
-                hasil.getDate("tgl_pelanggaran"),
-                hasil.getString("nama_kategori"),
-                hasil.getString("keterangan")   
-            });
+            while (hasil.next()) {
+                tabmode.addRow(new Object[]{
+                    hasil.getString("nisn"),
+                    hasil.getString("nama"),
+                    hasil.getDate("tgl_pelanggaran"),
+                    hasil.getString("kategori_pelanggaran"), // Menarik langsung dari kolom teks
+                    hasil.getString("keterangan")   
+                });
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data pelanggaran gagal dipanggil: " + e.getMessage());
         }
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Data pelanggaran gagal dipanggil: " + e.getMessage());
     }
- }
     private void loadcombo() {
-         try {
-        String sql = "SELECT nama_kategori FROM tbl_kategori_pelanggaran ORDER BY nama_kategori ASC";
-        PreparedStatement pst = con.prepareStatement(sql);
-        ResultSet rs = pst.executeQuery();
-
         cbkategori.removeAllItems();
         cbkategori.addItem("-- Pilih Kategori --");
-
-        while (rs.next()) {
-            cbkategori.addItem(rs.getString("nama_kategori"));
-        }
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Gagal Load Kategori: " + e.getMessage());
+        cbkategori.addItem("Terlambat");
+        cbkategori.addItem("Tidak Memakai Seragam");
+        cbkategori.addItem("Bermain HP di Kelas");
+        cbkategori.addItem("Makan di Kelas");
+        cbkategori.addItem("Merokok");
+        cbkategori.addItem("Bolos Sekolah");
+        cbkategori.addItem("Bertengkar");
+        cbkategori.addItem("Mencuri");
+        cbkategori.addItem("Membawa Senjata Tajam");
     }
-   }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -166,7 +160,7 @@ ResultSet rs;
 
         setMaximumSize(new java.awt.Dimension(214647, 2147483647));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Input", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(2, 2, 2))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Input", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 16), new java.awt.Color(2, 2, 2))); // NOI18N
         jPanel1.setForeground(new java.awt.Color(1, 1, 1));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -237,40 +231,42 @@ ResultSet rs;
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(tglIinput, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(0, 2, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(cbkategori, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(5, 5, 5))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(txtnama, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(8, 8, 8)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(tglIinput, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                        .addGap(7, 7, 7))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                        .addGap(28, 28, 28)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbkategori, 0, 399, Short.MAX_VALUE)
+                                    .addComponent(txtkelas, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))
+                                .addGap(5, 5, 5))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(217, 217, 217)
+                                .addComponent(txtnama, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                                .addGap(8, 8, 8))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel16))
+                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(txtnisn, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtnisn, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(bcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(bcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(1, 1, 1)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -290,9 +286,11 @@ ResultSet rs;
                     .addComponent(txtkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tglIinput, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(tglIinput, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbkategori, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -364,7 +362,7 @@ ResultSet rs;
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtcarisiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
                         .addGap(124, 124, 124))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
@@ -407,14 +405,14 @@ ResultSet rs;
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(41, 41, 41))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(bsimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(bsimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
-                                .addComponent(bbatal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(bbatal, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(28, 28, 28)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -488,14 +486,15 @@ ResultSet rs;
     }
 
     try {
+        // SQL Baru: Insert langsung teks kategori tanpa mencari id_kategori
         String sql = "INSERT INTO tbl_pelanggaran "
-                   + "(nisn, tgl_pelanggaran, id_kategori, keterangan) "
-                   + "VALUES (?, ?, (SELECT id_kategori FROM tbl_kategori_pelanggaran WHERE nama_kategori = ?), ?)";
+                   + "(nisn, tgl_pelanggaran, kategori_pelanggaran, keterangan) "
+                   + "VALUES (?, ?, ?, ?)";
         
         PreparedStatement pst = con.prepareStatement(sql);
         pst.setString(1, nisn);
         pst.setDate(2, sqlDate);
-        pst.setString(3, kategori);
+        pst.setString(3, kategori); // Menyimpan teks "Terlambat", "Bolos", dll secara langsung
         pst.setString(4, keterangan);
         
         pst.executeUpdate();
