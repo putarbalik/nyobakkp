@@ -31,22 +31,24 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jLabel1" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="bsimpan" pref="231" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                              <Component id="bbatal" pref="251" max="32767" attributes="0"/>
+                      <Component id="jLabel1" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="bsimpan" min="-2" pref="296" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="bbatal" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jPanel1" max="32767" attributes="0"/>
+                          <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
-                      <Component id="jPanel2" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -63,7 +65,7 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="bsimpan" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="bbatal" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -94,117 +96,112 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel12" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel7" alignment="0" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                                  <Component id="txtnama" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                                  <Component id="txtnisn" pref="198" max="32767" attributes="0"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="bcarisiswa" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabel15" pref="187" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPane2" pref="267" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel14" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel9" alignment="0" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="tglIinput" max="32767" attributes="0"/>
-                              <Component id="cbkategori" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="txtnisn" min="-2" pref="292" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="bcarisiswa" min="-2" pref="99" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="jLabel13" pref="183" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                          <Component id="txtkelas" pref="266" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="jLabel14" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jLabel13" alignment="0" pref="202" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="cbkategori" pref="399" max="32767" attributes="0"/>
+                                      <Component id="txtkelas" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel9" alignment="0" min="-2" pref="202" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="tglIinput" alignment="1" pref="399" max="32767" attributes="0"/>
+                                      <Component id="txtnama" alignment="1" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="jLabel15" pref="201" max="32767" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane2" min="-2" pref="407" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtnisn" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
-                      <Component id="bcarisiswa" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="bcarisiswa" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtnama" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtkelas" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jLabel9" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                       <Component id="tglIinput" min="-2" pref="28" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbkategori" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" min="-2" pref="184" max="-2" attributes="0"/>
+                      <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="39" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jScrollPane2" min="-2" pref="184" max="-2" attributes="0"/>
+                      <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="jLabel7">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Times New Roman" size="24" style="1"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="NISN                   :"/>
-          </Properties>
-        </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="tglIinput">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Times New Roman" size="24" style="1"/>
+              <Font name="Segoe UI" size="24" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="TANGGAL         :"/>
+            <Property name="text" type="java.lang.String" value="TANGGAL           :"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtnisn">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtnisnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="bcarisiswa">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Times New Roman" size="12" style="1"/>
+              <Font name="Segoe UI" size="12" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="CARI"/>
           </Properties>
@@ -215,35 +212,44 @@
         <Component class="javax.swing.JLabel" name="jLabel12">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Times New Roman" size="24" style="1"/>
+              <Font name="Segoe UI" size="24" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="NAMA                :"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtnama">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtnamaActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel13">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Times New Roman" size="24" style="1"/>
+              <Font name="Segoe UI" size="24" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="KELAS               :"/>
+            <Property name="text" type="java.lang.String" value="KELAS                 :"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtkelas">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtkelasActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel14">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Times New Roman" size="24" style="1"/>
+              <Font name="Segoe UI" size="24" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="KATEGORI       :"/>
+            <Property name="text" type="java.lang.String" value="KATEGORI          :"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="cbkategori">
@@ -255,6 +261,9 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbkategoriActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -262,9 +271,10 @@
         <Component class="javax.swing.JLabel" name="jLabel15">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Times New Roman" size="24" style="1"/>
+              <Font name="Segoe UI" size="24" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="KETERANGAN :"/>
+            <Property name="text" type="java.lang.String" value="KETERANGAN    :"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane2">
@@ -282,15 +292,25 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JLabel" name="jLabel16">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="24" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="NIS                      :"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Times New Roman" size="36" style="1"/>
+          <Font name="Segoe UI" size="24" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Form Input Pelanggaram Siswa"/>
+        <Property name="text" type="java.lang.String" value="Form Input Pelanggaran Siswa"/>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="jPanel2">
@@ -306,20 +326,16 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="jLabel10" pref="88" max="32767" attributes="0"/>
-                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtcarisiswa" pref="241" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="97" max="-2" attributes="0"/>
+                          <Component id="jLabel10" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="txtcarisiswa" min="-2" pref="281" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="124" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                          <Component id="jScrollPane3" pref="434" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="jScrollPane3" alignment="1" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -333,7 +349,7 @@
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jScrollPane3" min="-2" pref="321" max="-2" attributes="0"/>
-                  <EmptySpace pref="24" max="32767" attributes="0"/>
+                  <EmptySpace pref="29" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -353,9 +369,10 @@
         <Component class="javax.swing.JLabel" name="jLabel10">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Times New Roman" size="18" style="1"/>
+              <Font name="Segoe UI" size="24" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Cari Siswa :"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane3">
@@ -411,7 +428,7 @@
     <Component class="javax.swing.JButton" name="bbatal">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Times New Roman" size="18" style="1"/>
+          <Font name="Segoe UI" size="18" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="BATAL"/>
       </Properties>
@@ -422,7 +439,7 @@
     <Component class="javax.swing.JButton" name="bsimpan">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Times New Roman" size="18" style="1"/>
+          <Font name="Segoe UI" size="18" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="SIMPAN"/>
       </Properties>
