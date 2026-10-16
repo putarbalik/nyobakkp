@@ -34,6 +34,195 @@ public class homedashboardkesiswaan extends javax.swing.JInternalFrame {
     public homedashboardkesiswaan() {
         initComponents();
         tampilkanAngkaRingkasan();
+        tampilkanGrafik();
+        tampilkanTabelLive();
+    }
+    
+    public void tampilkanGrafik() {
+        Connection conn = koneksi.getConnection();
+        if (conn == null) {
+            System.err.println("Koneksi gagal, grafik tidak dapat dimuat.");
+            return;
+        }
+
+        // =========================================================================
+        // 1. GRAFIK GARIS (KIRI) - Tren Pelanggaran Bulanan
+        // =========================================================================
+        org.jfree.data.category.DefaultCategoryDataset lineDataset = new org.jfree.data.category.DefaultCategoryDataset();
+        String[] bulanBulan = {"Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"};
+        int[] dataBulan = new int[12];
+        int maxKasus = 0;
+
+        String sqlLine = "SELECT MONTH(tgl_pelanggaran) as bulan, COUNT(*) as jumlah "
+                       + "FROM tbl_pelanggaran WHERE YEAR(tgl_pelanggaran) = YEAR(CURDATE()) "
+                       + "GROUP BY MONTH(tgl_pelanggaran)";
+
+        try (PreparedStatement ps = conn.prepareStatement(sqlLine);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                int blnIndex = rs.getInt("bulan") - 1; 
+                int jml = rs.getInt("jumlah");
+                dataBulan[blnIndex] = jml;
+                if (jml > maxKasus) maxKasus = jml; 
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("Gagal memuat data line chart: " + e.getMessage());
+        }
+
+        for (int i = 0; i < 12; i++) {
+            lineDataset.setValue(dataBulan[i], "Kasus", bulanBulan[i]);
+        }
+
+        JFreeChart lineChart = ChartFactory.createLineChart(
+                null, null, null, lineDataset, 
+                org.jfree.chart.plot.PlotOrientation.VERTICAL, 
+                false, true, false);
+        
+        // Judul Kiri (Mencorong ke kanan sedikit agar tidak mepet)
+        org.jfree.chart.title.TextTitle titleKiri = new org.jfree.chart.title.TextTitle("Tren Pelanggaran", new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
+        titleKiri.setHorizontalAlignment(org.jfree.ui.HorizontalAlignment.LEFT);
+        titleKiri.setMargin(new org.jfree.ui.RectangleInsets(15, 20, 0, 5)); // Jarak 20px dari kiri
+        lineChart.setTitle(titleKiri);
+        
+        // Judul Kanan (Tahun) dinaikkan dengan margin negatif agar sejajar
+        int tahunSekarang = java.time.Year.now().getValue();
+        org.jfree.chart.title.TextTitle titleKanan = new org.jfree.chart.title.TextTitle(String.valueOf(tahunSekarang), new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
+        titleKanan.setHorizontalAlignment(org.jfree.ui.HorizontalAlignment.RIGHT);
+        titleKanan.setMargin(new org.jfree.ui.RectangleInsets(-25, 5, 0, 20)); // Margin atas -25px menariknya ke atas
+        lineChart.addSubtitle(titleKanan);
+
+        org.jfree.chart.plot.CategoryPlot linePlot = lineChart.getCategoryPlot();
+        linePlot.setBackgroundPaint(java.awt.Color.WHITE);
+        linePlot.setOutlineVisible(false);
+        linePlot.setDomainGridlinesVisible(false);
+        linePlot.setRangeGridlinePaint(new java.awt.Color(230, 230, 230));
+
+        org.jfree.chart.renderer.category.LineAndShapeRenderer renderer = new org.jfree.chart.renderer.category.LineAndShapeRenderer();
+        renderer.setSeriesPaint(0, new java.awt.Color(54, 162, 235)); 
+        renderer.setSeriesStroke(0, new java.awt.BasicStroke(3.0f)); 
+        linePlot.setRenderer(renderer);
+
+        org.jfree.chart.axis.NumberAxis yAxis = (org.jfree.chart.axis.NumberAxis) linePlot.getRangeAxis();
+        yAxis.setStandardTickUnits(org.jfree.chart.axis.NumberAxis.createIntegerTickUnits()); 
+        yAxis.setRange(0, maxKasus + 10); 
+        
+        yAxis.setTickLabelFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+        linePlot.getDomainAxis().setTickLabelFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+        lineChart.setBackgroundPaint(java.awt.Color.WHITE);
+        lineChart.setPadding(new org.jfree.ui.RectangleInsets(10, 10, 10, 10)); // Ruang agar grafik tidak tabrakan dengan border melengkung
+
+        ChartPanel lineChartPanel = new ChartPanel(lineChart);
+        lineChartPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(200, 200, 200), 2, true)); // Border Sudut Tumpul
+        jPanel7.removeAll(); 
+        jPanel7.setLayout(new java.awt.BorderLayout());
+        jPanel7.add(lineChartPanel, java.awt.BorderLayout.CENTER);
+        jPanel7.validate();
+
+
+        // =========================================================================
+        // 2. DONUT CHART (KANAN) - Sebaran Kasus
+        // =========================================================================
+        org.jfree.data.general.DefaultPieDataset pieDataset = new org.jfree.data.general.DefaultPieDataset();
+        String sqlPie = "SELECT kategori_pelanggaran, COUNT(id_pelanggaran) as jumlah "
+                      + "FROM tbl_pelanggaran GROUP BY kategori_pelanggaran ORDER BY jumlah DESC LIMIT 5";
+
+        try (PreparedStatement ps = conn.prepareStatement(sqlPie);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                pieDataset.setValue(rs.getString("kategori_pelanggaran"), rs.getInt("jumlah"));
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("Gagal memuat data donut chart: " + e.getMessage());
+        }
+
+        JFreeChart donutChart = ChartFactory.createRingChart(null, pieDataset, true, true, false); 
+        
+        // Menambahkan Judul Sebaran Jenis Kasus
+        org.jfree.chart.title.TextTitle titleDonut = new org.jfree.chart.title.TextTitle("Sebaran Jenis Kasus", new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
+        titleDonut.setHorizontalAlignment(org.jfree.ui.HorizontalAlignment.LEFT);
+        titleDonut.setMargin(new org.jfree.ui.RectangleInsets(15, 20, 5, 5));
+        donutChart.setTitle(titleDonut);
+        
+        org.jfree.chart.plot.RingPlot donutPlot = (org.jfree.chart.plot.RingPlot) donutChart.getPlot();
+        donutPlot.setBackgroundPaint(java.awt.Color.WHITE);
+        donutPlot.setOutlineVisible(false);
+        donutPlot.setShadowXOffset(0);
+        donutPlot.setShadowYOffset(0);
+        
+        // Mempertebal donat agar persentase 18px muat sempurna di dalamnya
+        donutPlot.setSectionDepth(0.50); 
+        donutPlot.setInteriorGap(0.04); 
+        
+        donutPlot.setLabelGenerator(new org.jfree.chart.labels.StandardPieSectionLabelGenerator("{2}")); 
+        donutPlot.setSimpleLabels(true); 
+        donutPlot.setLabelFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14)); // Dikecilkan sedikit jadi 14 agar persentase kecil seperti 5% tidak luber
+        donutPlot.setLabelBackgroundPaint(null);
+        donutPlot.setLabelOutlinePaint(null);
+        donutPlot.setLabelShadowPaint(null);
+        
+        donutChart.getLegend().setPosition(org.jfree.ui.RectangleEdge.RIGHT);
+        donutChart.getLegend().setItemFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        donutChart.getLegend().setBorder(org.jfree.chart.block.BlockBorder.NONE); // Menghilangkan kotak pada tulisan legenda
+        
+        donutChart.setBackgroundPaint(java.awt.Color.WHITE);
+        donutChart.setPadding(new org.jfree.ui.RectangleInsets(10, 10, 10, 10)); // Ruang border
+
+        ChartPanel donutChartPanel = new ChartPanel(donutChart);
+        donutChartPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(200, 200, 200), 2, true)); // Border Sudut Tumpul
+        jPanel1.removeAll();
+        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel1.add(donutChartPanel, java.awt.BorderLayout.CENTER);
+        jPanel1.validate();
+    }
+    
+    public void tampilkanTabelLive() {
+        // Menambahkan kolom "Nama Siswa" ke dalam Header Tabel
+        String[] kolom = {"NIS", "Nama Siswa", "Kategori Pelanggaran", "Tanggal & Jam Kejadian"};
+        DefaultTableModel modelTabel = new DefaultTableModel(null, kolom) {
+            @Override
+            public boolean isCellEditable(int row, int column) { 
+                return false; 
+            }
+        };
+        tblpelanggaran.setModel(modelTabel);
+        
+        // Memperindah tampilan tabel
+        tblpelanggaran.getTableHeader().setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
+        tblpelanggaran.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        tblpelanggaran.setRowHeight(30);
+
+        Connection conn = koneksi.getConnection();
+        if (conn == null) return;
+
+        // Menggunakan perintah JOIN untuk menarik kolom 'nama' dari tbl_siswa
+        String sql = "SELECT p.nisn, s.nama, p.kategori_pelanggaran, p.created_at "
+                   + "FROM tbl_pelanggaran p "
+                   + "JOIN tbl_siswa s ON p.nisn = s.nisn "
+                   + "ORDER BY p.created_at DESC LIMIT 10";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            // Format tanggal dan jam standar Indonesia
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+            while (rs.next()) {
+                String tglJamFormat = "-";
+                if(rs.getTimestamp("created_at") != null) {
+                    tglJamFormat = sdf.format(rs.getTimestamp("created_at"));
+                }
+                
+                // Memasukkan data ke dalam baris secara berurutan sesuai Header
+                modelTabel.addRow(new Object[]{
+                    rs.getString("nisn"),
+                    rs.getString("nama"),
+                    rs.getString("kategori_pelanggaran"),
+                    tglJamFormat
+                });
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("Gagal memuat tabel live: " + e.getMessage());
+        }
     }
     
     
@@ -116,13 +305,11 @@ public void scaleImage(javax.swing.JComponent komponenTarget, String pathGambar)
         lbl_angkaSiswa = new javax.swing.JLabel();
         lsiswa = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         lpelanggaran = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lbl_angkaKasus = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -146,14 +333,14 @@ public void scaleImage(javax.swing.JComponent komponenTarget, String pathGambar)
 
         tkelas.setFont(new java.awt.Font("Segoe UI Symbol", 3, 12)); // NOI18N
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI Symbol", 3, 18)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel7.setText("RINGKASAN HARI INI");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI Symbol", 3, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Total Siswa Aktif");
 
-        lbl_angkaSiswa.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_angkaSiswa.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lbl_angkaSiswa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_angkaSiswa.setText("0 Siswa");
 
@@ -191,21 +378,15 @@ public void scaleImage(javax.swing.JComponent komponenTarget, String pathGambar)
                 .addContainerGap())
         );
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI Symbol", 3, 18)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("PELANGGARAN BULAN INI");
-
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 626, Short.MAX_VALUE)
+            .addGap(0, 628, Short.MAX_VALUE)
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addComponent(jLabel6)
-                .addContainerGap(253, Short.MAX_VALUE))
+            .addGap(0, 278, Short.MAX_VALUE)
         );
 
         lpelanggaran.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/pelanggaran.png"))); // NOI18N
@@ -216,11 +397,11 @@ public void scaleImage(javax.swing.JComponent komponenTarget, String pathGambar)
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI Symbol", 3, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Pelanggaran Hari ini");
 
-        lbl_angkaKasus.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_angkaKasus.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lbl_angkaKasus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_angkaKasus.setText("0 Siswa");
 
@@ -250,21 +431,15 @@ public void scaleImage(javax.swing.JComponent komponenTarget, String pathGambar)
                 .addContainerGap())
         );
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI Symbol", 3, 18)); // NOI18N
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("SEBARAN JENIS KASUS");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
+            .addGap(0, 582, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel9)
-                .addContainerGap(253, Short.MAX_VALUE))
+            .addGap(0, 278, Short.MAX_VALUE)
         );
 
         jLabel12.setFont(new java.awt.Font("Segoe UI Symbol", 3, 18)); // NOI18N
@@ -364,9 +539,7 @@ public void scaleImage(javax.swing.JComponent komponenTarget, String pathGambar)
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
