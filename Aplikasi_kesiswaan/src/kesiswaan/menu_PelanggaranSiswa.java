@@ -111,18 +111,51 @@ ResultSet rs;
         }
     }
         
-    private void loadcombo() {
+        private void loadcombo() {
         cbkategori.removeAllItems();
         cbkategori.addItem("-- Pilih Kategori --");
-        cbkategori.addItem("Terlambat");
-        cbkategori.addItem("Tidak Memakai Seragam");
-        cbkategori.addItem("Bermain HP di Kelas");
-        cbkategori.addItem("Makan di Kelas");
-        cbkategori.addItem("Merokok");
-        cbkategori.addItem("Bolos Sekolah");
-        cbkategori.addItem("Bertengkar");
-        cbkategori.addItem("Mencuri");
-        cbkategori.addItem("Membawa Senjata Tajam");
+        cbkategori.addItem("Terlambat masuk sekolah");
+        cbkategori.addItem("Tidak memakai seragam sesuai jadwal.");
+        cbkategori.addItem("Tidak memakai atribut nama murid");
+        cbkategori.addItem("Tidak memakai atribut bendera merah putih");
+        cbkategori.addItem("Tidak memakai topi SMPN 259");
+        cbkategori.addItem("Tidak memakai atribut nama SMPN 259");
+        cbkategori.addItem("Tidak memakai dasi biru");
+        cbkategori.addItem("Tidak memakai dasi pramuka");
+        cbkategori.addItem("Tidak memakai ikat pinggang logo 259");
+        cbkategori.addItem("Tidak memakai kaos kaki putih");
+        cbkategori.addItem("Tidak memakai sepatu NB hitam putih tinggi");
+        cbkategori.addItem("Memakai pakaian ketat");
+        cbkategori.addItem("Memakai perhiasan berlebihan");
+        cbkategori.addItem("Memakai make-up berlebihan");
+        cbkategori.addItem("Mencorat coret seragam/topi/atribut");
+        cbkategori.addItem("Rambut panjang (bagi laki-laki)");
+        cbkategori.addItem("Alis di kerok");
+        cbkategori.addItem("Bertato");
+        cbkategori.addItem("Masuk atau keluar tidak melewati pintu (melompat jendela, pagar, dll).");
+        cbkategori.addItem("Membawa uang dalam jumlah besar atau berlebih.");
+        cbkategori.addItem("Mewarnai atau mengecat rambut maupun kuku.");
+        cbkategori.addItem("Membuat kegaduhan atau huru-hara dalam lingkungan sekolah.");
+        cbkategori.addItem("Membawa atau mengonsumsi permen karet di lingkungan sekolah.");
+        cbkategori.addItem("Melakukan perjudian di lingkungan sekolah dalam bentuk apa pun.");
+        cbkategori.addItem("Membawa buku, majalah, dan gambar-gambar tidak sopan atau porno yang tidak ada hubungannya dengan mata pelajaran.");
+        cbkategori.addItem("Menyimpan, membawa, memakai/menghisap rokok/vape, ganja, atau sejenisnya termasuk minuman keras yang memabukkan.");
+        cbkategori.addItem("Melihat bahkan terlibat perkelahian atau tawuran.");
+        cbkategori.addItem("Membawa senjata tajam, senjata api, bahan peledak dan lainnya yang melanggar hukum.");
+        cbkategori.addItem("Mengajak/mengikutsertakan orang lain untuk menyelesaikan persoalan yang timbul di sekolah tanpa seizin kepala sekolah melalui kemuridan.");
+        cbkategori.addItem("Meminta sesuatu dari temannya secara paksa dan atau mengancam.");
+        cbkategori.addItem("Menghina / merugikan nama baik teman-temannya.");
+        cbkategori.addItem("Bermain bola saat istirahat.");
+        cbkategori.addItem("Mengambil atau mencuri barang teman/milik orang lain.");
+        cbkategori.addItem("Membawa motor ke dalam lingkungan sekolah.");
+        cbkategori.addItem("Membawa gawai tanpa seizin wali kelas dan guru mapel.");
+        cbkategori.addItem("Membawa motor ke sekolah");
+        cbkategori.addItem("Bullying");
+        cbkategori.addItem("Penyalahgunaan di sosial media");
+        cbkategori.addItem("Pelecehan seksual dan kesusilaan");
+        cbkategori.addItem("Pergaulan");
+        cbkategori.addItem("Vandalisme dan Perusakan");
+        cbkategori.addItem("Narkotika");
     }
     /**
      * This method is called from within the constructor to initialize the form.
