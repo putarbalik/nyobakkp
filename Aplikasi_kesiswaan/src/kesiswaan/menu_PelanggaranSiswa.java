@@ -70,7 +70,7 @@ ResultSet rs;
     }
     }
     
-    protected void datatable(){
+        protected void datatable(){
         String[] baris = {"NIS", "Nama Siswa", "Tanggal", "Kategori", "Keterangan"};
         tabmode = new DefaultTableModel(null, baris) {
             @Override
@@ -83,12 +83,11 @@ ResultSet rs;
         String cariitem = txtcarisiswa.getText().trim();
         
         try {
-            // SQL Baru: Menghapus JOIN ke tbl_kategori_pelanggaran
-            String sql = "SELECT p.id_pelanggaran, p.nisn, s.nama, p.tgl_pelanggaran, " +
+            String sql = "SELECT p.id_pelanggaran, p.nis, s.nama_siswa, p.tgl_pelanggaran, " +
                          "p.kategori_pelanggaran, p.keterangan " +
                          "FROM tbl_pelanggaran p " +
-                         "JOIN tbl_siswa s ON p.nisn = s.nisn " +
-                         "WHERE p.nisn LIKE ? OR s.nama LIKE ? " +
+                         "JOIN tbl_siswa s ON p.nis = s.nis " +
+                         "WHERE p.nis LIKE ? OR s.nama_siswa LIKE ? " +
                          "ORDER BY p.tgl_pelanggaran DESC, p.id_pelanggaran DESC";
 
             PreparedStatement stat = con.prepareStatement(sql);
@@ -99,10 +98,10 @@ ResultSet rs;
 
             while (hasil.next()) {
                 tabmode.addRow(new Object[]{
-                    hasil.getString("nisn"),
-                    hasil.getString("nama"),
+                    hasil.getString("nis"),          // Diubah dari "nisn" menjadi "nis"
+                    hasil.getString("nama_siswa"),   // Diubah dari "nama" menjadi "nama_siswa"
                     hasil.getDate("tgl_pelanggaran"),
-                    hasil.getString("kategori_pelanggaran"), // Menarik langsung dari kolom teks
+                    hasil.getString("kategori_pelanggaran"),
                     hasil.getString("keterangan")   
                 });
             }
@@ -111,6 +110,7 @@ ResultSet rs;
             JOptionPane.showMessageDialog(null, "Data pelanggaran gagal dipanggil: " + e.getMessage());
         }
     }
+        
     private void loadcombo() {
         cbkategori.removeAllItems();
         cbkategori.addItem("-- Pilih Kategori --");
@@ -488,7 +488,7 @@ ResultSet rs;
     try {
         // SQL Baru: Insert langsung teks kategori tanpa mencari id_kategori
         String sql = "INSERT INTO tbl_pelanggaran "
-                   + "(nisn, tgl_pelanggaran, kategori_pelanggaran, keterangan) "
+                   + "(nis, tgl_pelanggaran, kategori_pelanggaran, keterangan) "
                    + "VALUES (?, ?, ?, ?)";
         
         PreparedStatement pst = con.prepareStatement(sql);
@@ -539,16 +539,16 @@ ResultSet rs;
     }
     
     try {
-        String sql = "SELECT s.nama, k.kelas FROM tbl_siswa s " +
-                     "LEFT JOIN tbl_kelas k ON s.kelas = k.id_kelas " +
-                     "WHERE s.nisn = ?";
+        // Mengambil data langsung dari 1 tabel (tbl_siswa)
+        String sql = "SELECT nama_siswa, kelas FROM tbl_siswa WHERE nis = ?";
         
         PreparedStatement pst = con.prepareStatement(sql);
         pst.setString(1, nisn);
         ResultSet rs = pst.executeQuery();
         
         if (rs.next()) {
-            txtnama.setText(rs.getString("nama"));
+            // Pastikan nama kolom di getString() sama dengan yang ada di SELECT
+            txtnama.setText(rs.getString("nama_siswa"));
             txtkelas.setText(rs.getString("kelas"));
         } else {
             JOptionPane.showMessageDialog(this, "Siswa dengan NISN " + nisn + " tidak ditemukan", "Peringatan", JOptionPane.WARNING_MESSAGE);
@@ -558,7 +558,7 @@ ResultSet rs;
         
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Gagal mencari siswa: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }        // TODO add your handling code here:
+    }
     }//GEN-LAST:event_bcarisiswaActionPerformed
 
     private void txtnisnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnisnActionPerformed

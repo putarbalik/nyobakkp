@@ -195,9 +195,9 @@ public class homedashboardkesiswaan extends javax.swing.JInternalFrame {
         if (conn == null) return;
 
         // Menggunakan perintah JOIN untuk menarik kolom 'nama' dari tbl_siswa
-        String sql = "SELECT p.nisn, s.nama, p.kategori_pelanggaran, p.created_at "
+        String sql = "SELECT p.nis, s.nama_siswa, p.kategori_pelanggaran, p.created_at "
                    + "FROM tbl_pelanggaran p "
-                   + "JOIN tbl_siswa s ON p.nisn = s.nisn "
+                   + "JOIN tbl_siswa s ON p.nis = s.nis "
                    + "ORDER BY p.created_at DESC LIMIT 10";
 
         try (PreparedStatement ps = conn.prepareStatement(sql);
@@ -214,8 +214,8 @@ public class homedashboardkesiswaan extends javax.swing.JInternalFrame {
                 
                 // Memasukkan data ke dalam baris secara berurutan sesuai Header
                 modelTabel.addRow(new Object[]{
-                    rs.getString("nisn"),
-                    rs.getString("nama"),
+                    rs.getString("nis"),                  // Ubah dari "nisn" menjadi "nis"
+                    rs.getString("nama_siswa"),           // Ubah dari "nama" menjadi "nama_siswa"
                     rs.getString("kategori_pelanggaran"),
                     tglJamFormat
                 });

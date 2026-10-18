@@ -24,7 +24,7 @@ public static Connection con;
         public static Connection getConnection(){
             if (connection == null) {
                 MysqlDataSource data = new MysqlDataSource();
-                data.setDatabaseName("dbschool_test");
+                data.setDatabaseName("dbsekolah_apksekolah");
                 data.setUser("root");
                 data.setPassword("");
                 try{
