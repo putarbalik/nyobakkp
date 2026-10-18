@@ -5,9 +5,8 @@
  */
 package pengaturandatabase;
 
-import pengaturandatabase.menu_jadwal;
+
 import pengaturandatabase.menu_siswa;
-import pengaturandatabase.menu_kelas;
 import pengaturandatabase.menu_guru;
 import java.awt.Image;
 import java.beans.PropertyVetoException;
@@ -54,10 +53,10 @@ private Connection conn = new koneksi().getConnection();
     h.tampilkanDiagramSiswa();
     h.tampilkanDiagramGuru();
     
-    setFixedIcon(menukelas, "/resource/class.png");
+   
     setFixedIcon(menuguru, "/resource/guru.png");
     setFixedIcon(menusiswa, "/resource/murid.png");
-    setFixedIcon(jdwl,"/resource/jadwal.png");
+    
     sethome(home,"/resource/home.png");
     setleave(keluar,"/resource/keluar.png");
     setadmin(admin,"/resource/admin.png");
@@ -72,10 +71,10 @@ private Connection conn = new koneksi().getConnection();
     if (role == null) {
         return; 
     }else if (role.equals("2")) { 
-        menukelas.setEnabled(false);
+        
         menusiswa.setEnabled(false);
         menuguru.setEnabled(false);
-        jdwl.setEnabled(false);
+        
         admin.setEnabled(false);
     } else if (role.equals("3")) {
         admin.setEnabled(false); 
@@ -290,10 +289,8 @@ private void setadmin(javax.swing.JButton btn, String path) {
         desktop = new javax.swing.JDesktopPane();
         jPanel1 = new javax.swing.JPanel();
         menusiswa = new javax.swing.JButton();
-        menukelas = new javax.swing.JButton();
         menuguru = new javax.swing.JButton();
         keluar = new javax.swing.JButton();
-        jdwl = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -395,18 +392,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
             }
         });
 
-        menukelas.setFont(new java.awt.Font("Segoe UI Symbol", 1, 14)); // NOI18N
-        menukelas.setForeground(new java.awt.Color(255, 255, 255));
-        menukelas.setText("Kelas");
-        menukelas.setBorderPainted(false);
-        menukelas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        menukelas.setFocusPainted(false);
-        menukelas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menukelasActionPerformed(evt);
-            }
-        });
-
         menuguru.setFont(new java.awt.Font("Segoe UI Symbol", 1, 14)); // NOI18N
         menuguru.setForeground(new java.awt.Color(255, 255, 255));
         menuguru.setText("Guru");
@@ -428,18 +413,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
             }
         });
 
-        jdwl.setFont(new java.awt.Font("Segoe UI Symbol", 1, 14)); // NOI18N
-        jdwl.setForeground(new java.awt.Color(255, 255, 255));
-        jdwl.setText("jadwal");
-        jdwl.setToolTipText("");
-        jdwl.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jdwl.setFocusPainted(false);
-        jdwl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jdwlActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -447,25 +420,19 @@ private void setadmin(javax.swing.JButton btn, String path) {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(menukelas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(menusiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(menuguru, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(keluar, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                    .addComponent(jdwl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(keluar, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(menukelas, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7)
+                .addGap(84, 84, 84)
                 .addComponent(menusiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(menuguru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jdwl, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 215, Short.MAX_VALUE)
                 .addComponent(keluar)
                 .addContainerGap())
         );
@@ -492,23 +459,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void menukelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menukelasActionPerformed
-    desktop.removeAll();
-    desktop.repaint();
-
-    menu_kelas mk = new menu_kelas();
-
-    desktop.add(mk);
-
-    mk.setVisible(true);
-    
-    try {
-        mk.setMaximum(true);
-    } catch (java.beans.PropertyVetoException e) {
-        System.err.println("Gagal memaksimalkan Internal Frame: " + e.getMessage());
-    }      
-    }//GEN-LAST:event_menukelasActionPerformed
 
     private void menuguruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuguruActionPerformed
     desktop.removeAll();
@@ -583,22 +533,6 @@ private void setadmin(javax.swing.JButton btn, String path) {
     user.setVisible(true);
     }//GEN-LAST:event_adminActionPerformed
 
-    private void jdwlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jdwlActionPerformed
-    desktop.removeAll();
-    desktop.repaint();
-    menu_jadwal mj = new menu_jadwal();
-
-    desktop.add(mj);
-
-    mj.setVisible(true);
-    
-    try {
-        mj.setMaximum(true);
-        } catch (java.beans.PropertyVetoException e) {
-            System.err.println("Gagal memaksimalkan Internal Frame: " + e.getMessage());
-        }
-    }//GEN-LAST:event_jdwlActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -623,12 +557,10 @@ private void setadmin(javax.swing.JButton btn, String path) {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JButton jdwl;
     private javax.swing.JButton keluar;
     private javax.swing.JLabel lblWelcome;
     private javax.swing.JLabel lbl_logo;
     private javax.swing.JButton menuguru;
-    private javax.swing.JButton menukelas;
     private javax.swing.JButton menusiswa;
     // End of variables declaration//GEN-END:variables
 }
