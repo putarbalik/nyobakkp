@@ -51,7 +51,7 @@ private Connection conn = new koneksi().getConnection();
     
     h.setVisible(true);
     h.tampilkanDiagramSiswa();
-    h.tampilkanDiagramGuru();
+    h.tampilkanTotalGuru();
     
    
     setFixedIcon(menuguru, "/resource/guru.png");
@@ -60,7 +60,6 @@ private Connection conn = new koneksi().getConnection();
     sethome(home,"/resource/home.png");
     setleave(keluar,"/resource/keluar.png");
     setadmin(admin,"/resource/admin.png");
-    lblWelcome.setText("Selamat Datang, ");
     validasiMenu();
     tampilkanHomeAwal();
     }
@@ -83,7 +82,7 @@ private Connection conn = new koneksi().getConnection();
     
 private void scaleImage() {
     try {
-        ImageIcon iconAwal = new ImageIcon(getClass().getResource("/resource/logo.png"));
+        ImageIcon iconAwal = new ImageIcon(getClass().getResource("/resource/logoSekolah.png"));
         Image imgLama = iconAwal.getImage();
         
         int width = lbl_logo.getWidth();
@@ -112,7 +111,7 @@ public void tampilkanHomeAwal() {
         h.setVisible(true);
         
         h.tampilkanDiagramSiswa();
-        h.tampilkanDiagramGuru();
+        h.tampilkanTotalGuru();
         
         desktop.repaint();
         desktop.revalidate();
@@ -285,7 +284,8 @@ private void setadmin(javax.swing.JButton btn, String path) {
         jLabel1 = new javax.swing.JLabel();
         home = new javax.swing.JButton();
         admin = new javax.swing.JButton();
-        lblWelcome = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         desktop = new javax.swing.JDesktopPane();
         jPanel1 = new javax.swing.JPanel();
         menusiswa = new javax.swing.JButton();
@@ -301,16 +301,17 @@ private void setadmin(javax.swing.JButton btn, String path) {
 
         jPanel2.setBackground(new java.awt.Color(0, 8, 97));
 
-        lbl_logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/logo.png"))); // NOI18N
+        lbl_logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/logoSekolah.png"))); // NOI18N
         lbl_logo.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 lbl_logoComponentResized(evt);
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Rockwell Extra Bold", 3, 22)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("SELAMAT DATANG DI DASHBOARD TATA USAHA");
+        jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         home.setFont(new java.awt.Font("Segoe UI Emoji", 1, 12)); // NOI18N
         home.addActionListener(new java.awt.event.ActionListener() {
@@ -325,8 +326,15 @@ private void setadmin(javax.swing.JButton btn, String path) {
             }
         });
 
-        lblWelcome.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        lblWelcome.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("SMP 259 JAKARTA");
+
+        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("KESISWAAN");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -334,12 +342,14 @@ private void setadmin(javax.swing.JButton btn, String path) {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbl_logo, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(77, 77, 77)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addComponent(lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lbl_logo, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 271, Short.MAX_VALUE)
                 .addComponent(admin, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23)
                 .addComponent(home, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -347,16 +357,20 @@ private void setadmin(javax.swing.JButton btn, String path) {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lbl_logo, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_logo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 57, Short.MAX_VALUE)
                     .addComponent(home, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(admin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(0, 0, 0)
+                                .addComponent(jLabel3))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -371,7 +385,7 @@ private void setadmin(javax.swing.JButton btn, String path) {
         desktop.setLayout(desktopLayout);
         desktopLayout.setHorizontalGroup(
             desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1120, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         desktopLayout.setVerticalGroup(
             desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -386,6 +400,7 @@ private void setadmin(javax.swing.JButton btn, String path) {
         menusiswa.setText("Siswa");
         menusiswa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         menusiswa.setFocusPainted(false);
+        menusiswa.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         menusiswa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menusiswaActionPerformed(evt);
@@ -397,6 +412,7 @@ private void setadmin(javax.swing.JButton btn, String path) {
         menuguru.setText("Guru");
         menuguru.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         menuguru.setFocusPainted(false);
+        menuguru.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         menuguru.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuguruActionPerformed(evt);
@@ -404,6 +420,7 @@ private void setadmin(javax.swing.JButton btn, String path) {
         });
 
         keluar.setBackground(new java.awt.Color(255, 0, 0));
+        keluar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         keluar.setText("Logout");
         keluar.setToolTipText("");
         keluar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -422,17 +439,16 @@ private void setadmin(javax.swing.JButton btn, String path) {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(menusiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(menuguru, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(keluar, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
+                    .addComponent(keluar, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(84, 84, 84)
                 .addComponent(menusiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(menuguru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 215, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 275, Short.MAX_VALUE)
                 .addComponent(keluar)
                 .addContainerGap())
         );
@@ -555,10 +571,11 @@ private void setadmin(javax.swing.JButton btn, String path) {
     private javax.swing.JDesktopPane desktop;
     private javax.swing.JButton home;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JButton keluar;
-    private javax.swing.JLabel lblWelcome;
     private javax.swing.JLabel lbl_logo;
     private javax.swing.JButton menuguru;
     private javax.swing.JButton menusiswa;

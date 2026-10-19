@@ -25,7 +25,7 @@ public class homedashboardtu extends javax.swing.JInternalFrame {
     public homedashboardtu() {
         initComponents();
         tampilkanDiagramSiswa();
-        tampilkanDiagramGuru();
+        tampilkanTotalGuru();
     }
     
     
@@ -82,62 +82,49 @@ public class homedashboardtu extends javax.swing.JInternalFrame {
     }
 }
 
-public void tampilkanDiagramGuru() {
-    DefaultPieDataset dataset = new DefaultPieDataset();
-
+public void tampilkanTotalGuru() {
     try {
         if (this.conn == null || this.conn.isClosed()) {
             this.conn = new koneksi().getConnection(); 
         }
 
-        String sql = "SELECT jkel, COUNT(*) as jumlah FROM guru GROUP BY jkel";
+        // Ambil total guru dari database
+        String sql = "SELECT COUNT(*) as total FROM guru";
         java.sql.PreparedStatement ps = conn.prepareStatement(sql);
         java.sql.ResultSet res = ps.executeQuery();
 
-        while (res.next()) {
-            String gender = res.getString("jkel");
-            int jumlah = res.getInt("jumlah");
-
-            String label = (gender.toLowerCase().startsWith("l")) ? "Laki - laki" : "Perempuan";
-            dataset.setValue(label + " (" + jumlah + ")", jumlah);
+        int total = 0;
+        if (res.next()) {
+            total = res.getInt("total");
         }
 
-        JFreeChart chart = ChartFactory.createPieChart(null, dataset, true, true, false);
-
-        chart.setBackgroundPaint(new java.awt.Color(255, 255, 255, 255));
-        chart.getLegend().setBackgroundPaint(new java.awt.Color(255, 255, 255, 255));
-        chart.getLegend().setItemPaint(java.awt.Color.BLACK); 
-
-        PiePlot plot = (PiePlot) chart.getPlot();
-        plot.setBackgroundPaint(null);
-        plot.setOutlineVisible(false);
-        plot.setShadowPaint(null);
-        
-        for (Object key : dataset.getKeys()) {
-            String l = key.toString();
-            if (l.startsWith("Laki - laki")) {
-                plot.setSectionPaint((Comparable) key, new java.awt.Color(0, 51, 102)); 
-            } else {
-                plot.setSectionPaint((Comparable) key, new java.awt.Color(135, 206, 250)); 
-            }
-        }
-
-        plot.setLabelPaint(java.awt.Color.BLACK);
-        plot.setLabelFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12));
-        plot.setLabelBackgroundPaint(new java.awt.Color(0, 0, 0, 0));
-        plot.setLabelOutlinePaint(null);
-
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(pnlgr.getWidth(), pnlgr.getHeight()));
-        chartPanel.setOpaque(false);
-        
+        // Bersihin panel pnlgr dari komponen sisa
         pnlgr.removeAll();
         pnlgr.setLayout(new java.awt.BorderLayout());
-        pnlgr.add(chartPanel, java.awt.BorderLayout.CENTER);
+        pnlgr.setBackground(new java.awt.Color(255, 255, 255)); // Kasih warna background putih
+
+        // Bikin judul card
+        javax.swing.JLabel lblJudul = new javax.swing.JLabel("TOTAL GURU");
+        lblJudul.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
+        lblJudul.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblJudul.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 0, 0, 0)); // Kasih jarak atas
+
+        // Bikin angka gedenya
+        javax.swing.JLabel lblAngka = new javax.swing.JLabel(String.valueOf(total));
+        lblAngka.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 64)); // Angkanya segede gaban
+        lblAngka.setForeground(new java.awt.Color(0, 51, 102)); // Warna biru gelap
+        lblAngka.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        // Masukin label ke panel pnlgr
+        pnlgr.add(lblJudul, java.awt.BorderLayout.NORTH);
+        pnlgr.add(lblAngka, java.awt.BorderLayout.CENTER);
+
+        // Refresh panelnya biar muncul
         pnlgr.validate();
+        pnlgr.repaint();
 
     } catch (Exception e) {
-        System.err.println("Gagal load diagram guru: " + e.getMessage());
+        System.err.println("Gagal load total guru: " + e.getMessage());
     }
 }
 
