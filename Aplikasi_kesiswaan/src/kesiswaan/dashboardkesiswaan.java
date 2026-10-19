@@ -284,7 +284,6 @@ private void setPel(javax.swing.JButton btn, String path) {
         jPanel1 = new javax.swing.JPanel();
         bpel = new javax.swing.JButton();
         logout = new javax.swing.JButton();
-        bpel1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lab_login = new javax.swing.JLabel();
         home = new javax.swing.JButton();
@@ -317,15 +316,6 @@ private void setPel(javax.swing.JButton btn, String path) {
             }
         });
 
-        bpel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        bpel1.setText("Pelanggaran");
-        bpel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        bpel1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bpel1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -333,9 +323,8 @@ private void setPel(javax.swing.JButton btn, String path) {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bpel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(logout, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(bpel1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
+                    .addComponent(bpel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                    .addComponent(logout, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -343,9 +332,7 @@ private void setPel(javax.swing.JButton btn, String path) {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(8, 8, 8)
                 .addComponent(bpel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bpel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 464, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 503, Short.MAX_VALUE)
                 .addComponent(logout)
                 .addGap(25, 25, 25))
         );
@@ -507,10 +494,6 @@ for (JInternalFrame frame : desktop.getAllFrames()) {
         tampilkanHomeAwal();
     }//GEN-LAST:event_homeActionPerformed
 
-    private void bpel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bpel1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bpel1ActionPerformed
-
   public static void main(String args[]) {
     try {
     } catch (Exception ex) {
@@ -526,7 +509,6 @@ for (JInternalFrame frame : desktop.getAllFrames()) {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bpel;
-    private javax.swing.JButton bpel1;
     private javax.swing.JDesktopPane desktop;
     private javax.swing.JButton home;
     private javax.swing.JLabel jLabel1;
