@@ -70,7 +70,7 @@ ResultSet rs;
     }
     }
     
-        protected void datatable() {
+      protected void datatable() {
     String[] baris = {
         "NISN",
         "Nama Siswa",
