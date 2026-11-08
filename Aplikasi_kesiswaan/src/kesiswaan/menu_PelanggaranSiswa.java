@@ -70,46 +70,68 @@ ResultSet rs;
     }
     }
     
-        protected void datatable(){
-        String[] baris = {"NIS", "Nama Siswa", "Tanggal", "Kategori", "Keterangan"};
-        tabmode = new DefaultTableModel(null, baris) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; 
-            }
-        };
-        tblpelanggaran.setModel(tabmode);
+        protected void datatable() {
+    String[] baris = {
+        "NISN",
+        "Nama Siswa",
+        "Tanggal",
+        "Kategori Pelanggaran",
+        "Keterangan"
+    };
 
-        String cariitem = txtcarisiswa.getText().trim();
-        
-        try {
-            String sql = "SELECT p.id_pelanggaran, p.nis, s.nama_siswa, p.tgl_pelanggaran, " +
-                         "p.kategori_pelanggaran, p.keterangan " +
-                         "FROM tbl_pelanggaran p " +
-                         "JOIN tbl_siswa s ON p.nis = s.nis " +
-                         "WHERE p.nis LIKE ? OR s.nama_siswa LIKE ? " +
-                         "ORDER BY p.tgl_pelanggaran DESC, p.id_pelanggaran DESC";
-
-            PreparedStatement stat = con.prepareStatement(sql);
-            stat.setString(1, "%" + cariitem + "%");
-            stat.setString(2, "%" + cariitem + "%");
-
-            ResultSet hasil = stat.executeQuery();
-
-            while (hasil.next()) {
-                tabmode.addRow(new Object[]{
-                    hasil.getString("nis"),          // Diubah dari "nisn" menjadi "nis"
-                    hasil.getString("nama_siswa"),   // Diubah dari "nama" menjadi "nama_siswa"
-                    hasil.getDate("tgl_pelanggaran"),
-                    hasil.getString("kategori_pelanggaran"),
-                    hasil.getString("keterangan")   
-                });
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Data pelanggaran gagal dipanggil: " + e.getMessage());
+    tabmode = new DefaultTableModel(null, baris) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
         }
+    };
+
+    tblpelanggaran.setModel(tabmode);
+
+    String cariitem = txtcarisiswa.getText().trim();
+
+    try {
+        String sql = "SELECT "
+                + "p.nisn, "
+                + "s.nama, "
+                + "p.tgl_pelanggaran, "
+                + "p.kategori_pelanggaran, "
+                + "p.keterangan "
+                + "FROM tbl_pelanggaran p "
+                + "JOIN tbl_siswa s ON p.nisn = s.nisn "
+                + "WHERE p.nisn LIKE ? "
+                + "OR s.nama LIKE ? "
+                + "OR p.kategori_pelanggaran LIKE ? "
+                + "ORDER BY p.tgl_pelanggaran DESC";
+
+        PreparedStatement stat = con.prepareStatement(sql);
+
+        stat.setString(1, "%" + cariitem + "%");
+        stat.setString(2, "%" + cariitem + "%");
+        stat.setString(3, "%" + cariitem + "%");
+
+        ResultSet hasil = stat.executeQuery();
+
+        while (hasil.next()) {
+            tabmode.addRow(new Object[]{
+                hasil.getString("nisn"),
+                hasil.getString("nama"),
+                hasil.getDate("tgl_pelanggaran"),
+                hasil.getString("kategori_pelanggaran"),
+                hasil.getString("keterangan")
+            });
+        }
+
+        hasil.close();
+        stat.close();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Data pelanggaran gagal dipanggil: " + e.getMessage()
+        );
     }
+}
         
         private void loadcombo() {
         cbkategori.removeAllItems();
