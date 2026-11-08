@@ -30,6 +30,51 @@ private Connection con = new koneksi().getConnection();
 private DefaultTableModel tabmode;
 PreparedStatement ps;
 ResultSet rs;
+
+private String[] daftarKategori = {
+    "Terlambat masuk sekolah",
+    "Tidak memakai seragam sesuai jadwal",
+    "Tidak memakai atribut nama murid",
+    "Tidak memakai atribut bendera merah putih",
+    "Tidak memakai topi SMPN 259",
+    "Tidak memakai atribut nama SMPN 259",
+    "Tidak memakai dasi biru",
+    "Tidak memakai dasi pramuka",
+    "Tidak memakai ikat pinggang logo 259",
+    "Tidak memakai kaos kaki putih",
+    "Tidak memakai sepatu NB hitam putih tinggi",
+    "Memakai pakaian ketat",
+    "Memakai perhiasan berlebihan",
+    "Memakai make-up berlebihan",
+    "Mencorat coret seragam/topi/atribut",
+    "Rambut panjang (bagi laki-laki)",
+    "Alis di kerok",
+    "Bertato",
+    "Masuk atau keluar tidak melewati pintu",
+    "Membawa uang dalam jumlah besar atau berlebih",
+    "Mewarnai atau mengecat rambut maupun kuku",
+    "Membuat kegaduhan atau huru-hara",
+    "Membawa atau mengonsumsi permen karet",
+    "Melakukan perjudian di lingkungan sekolah",
+    "Membawa buku/majalah/gambar tidak sopan",
+    "Rokok/vape/ganja/miras",
+    "Perkelahian atau tawuran",
+    "Membawa senjata tajam/api/bahan peledak",
+    "Mengajak orang lain menyelesaikan persoalan",
+    "Meminta sesuatu dari temannya secara paksa",
+    "Menghina atau merugikan nama baik teman",
+    "Bermain bola saat istirahat",
+    "Mengambil atau mencuri barang teman/orang lain",
+    "Membawa motor ke dalam lingkungan sekolah",
+    "Membawa gawai tanpa seizin wali kelas",
+    "Bullying",
+    "Penyalahgunaan di sosial media",
+    "Pelecehan seksual dan kesusilaan",
+    "Pergaulan bebas",
+    "Vandalisme dan perusakan",
+    "Narkotika"
+};
+
     /**
      * Creates new form menu_pelanggaranSiswa
      */
@@ -43,6 +88,7 @@ ResultSet rs;
     scrollUtama.getVerticalScrollBar().setUnitIncrement(16);
     setContentPane(scrollUtama);
         loadcombo();
+        aturAutocomplete();
         kosong();
         aktif();
         datatable();
@@ -136,49 +182,46 @@ ResultSet rs;
         private void loadcombo() {
         cbkategori.removeAllItems();
         cbkategori.addItem("-- Pilih Kategori --");
-        cbkategori.addItem("Terlambat masuk sekolah");
-        cbkategori.addItem("Tidak memakai seragam sesuai jadwal.");
-        cbkategori.addItem("Tidak memakai atribut nama murid");
-        cbkategori.addItem("Tidak memakai atribut bendera merah putih");
-        cbkategori.addItem("Tidak memakai topi SMPN 259");
-        cbkategori.addItem("Tidak memakai atribut nama SMPN 259");
-        cbkategori.addItem("Tidak memakai dasi biru");
-        cbkategori.addItem("Tidak memakai dasi pramuka");
-        cbkategori.addItem("Tidak memakai ikat pinggang logo 259");
-        cbkategori.addItem("Tidak memakai kaos kaki putih");
-        cbkategori.addItem("Tidak memakai sepatu NB hitam putih tinggi");
-        cbkategori.addItem("Memakai pakaian ketat");
-        cbkategori.addItem("Memakai perhiasan berlebihan");
-        cbkategori.addItem("Memakai make-up berlebihan");
-        cbkategori.addItem("Mencorat coret seragam/topi/atribut");
-        cbkategori.addItem("Rambut panjang (bagi laki-laki)");
-        cbkategori.addItem("Alis di kerok");
-        cbkategori.addItem("Bertato");
-        cbkategori.addItem("Masuk atau keluar tidak melewati pintu (melompat jendela, pagar, dll).");
-        cbkategori.addItem("Membawa uang dalam jumlah besar atau berlebih.");
-        cbkategori.addItem("Mewarnai atau mengecat rambut maupun kuku.");
-        cbkategori.addItem("Membuat kegaduhan atau huru-hara dalam lingkungan sekolah.");
-        cbkategori.addItem("Membawa atau mengonsumsi permen karet di lingkungan sekolah.");
-        cbkategori.addItem("Melakukan perjudian di lingkungan sekolah dalam bentuk apa pun.");
-        cbkategori.addItem("Membawa buku, majalah, dan gambar-gambar tidak sopan atau porno yang tidak ada hubungannya dengan mata pelajaran.");
-        cbkategori.addItem("Menyimpan, membawa, memakai/menghisap rokok/vape, ganja, atau sejenisnya termasuk minuman keras yang memabukkan.");
-        cbkategori.addItem("Melihat bahkan terlibat perkelahian atau tawuran.");
-        cbkategori.addItem("Membawa senjata tajam, senjata api, bahan peledak dan lainnya yang melanggar hukum.");
-        cbkategori.addItem("Mengajak/mengikutsertakan orang lain untuk menyelesaikan persoalan yang timbul di sekolah tanpa seizin kepala sekolah melalui kemuridan.");
-        cbkategori.addItem("Meminta sesuatu dari temannya secara paksa dan atau mengancam.");
-        cbkategori.addItem("Menghina / merugikan nama baik teman-temannya.");
-        cbkategori.addItem("Bermain bola saat istirahat.");
-        cbkategori.addItem("Mengambil atau mencuri barang teman/milik orang lain.");
-        cbkategori.addItem("Membawa motor ke dalam lingkungan sekolah.");
-        cbkategori.addItem("Membawa gawai tanpa seizin wali kelas dan guru mapel.");
-        cbkategori.addItem("Membawa motor ke sekolah");
-        cbkategori.addItem("Bullying");
-        cbkategori.addItem("Penyalahgunaan di sosial media");
-        cbkategori.addItem("Pelecehan seksual dan kesusilaan");
-        cbkategori.addItem("Pergaulan");
-        cbkategori.addItem("Vandalisme dan Perusakan");
-        cbkategori.addItem("Narkotika");
+        for (String k : daftarKategori) {
+            cbkategori.addItem(k);
+        }
     }
+        
+        private void aturAutocomplete() {
+            javax.swing.text.JTextComponent editor =
+            (javax.swing.text.JTextComponent) cbkategori.getEditor().getEditorComponent();
+
+        editor.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+         public void insertUpdate(javax.swing.event.DocumentEvent e)  { filterLater(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e)  { filterLater(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {}
+         });
+}
+
+        private void filterLater() {
+             javax.swing.SwingUtilities.invokeLater(new Runnable() {
+             public void run() {
+                String ketik = ((javax.swing.JTextField) cbkategori.getEditor().getEditorComponent())
+                             .getText().toLowerCase().trim();
+                javax.swing.DefaultComboBoxModel<String> model =
+                    (javax.swing.DefaultComboBoxModel<String>) cbkategori.getModel();
+
+                model.removeAllElements();
+                model.addElement("-- Pilih Kategori --");
+
+            for (String k : daftarKategori) {
+                if (ketik.isEmpty() || k.toLowerCase().contains(ketik)) {
+                    model.addElement(k);
+                }
+            }
+            if (!ketik.isEmpty() && model.getSize() == 1) {
+                model.addElement(ketik);
+            }
+
+            cbkategori.setSelectedIndex(-1);
+        }
+    });
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -215,7 +258,7 @@ ResultSet rs;
 
         setMaximumSize(new java.awt.Dimension(214647, 2147483647));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Input", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 16), new java.awt.Color(2, 2, 2))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Input", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(2, 2, 2))); // NOI18N
         jPanel1.setForeground(new java.awt.Color(1, 1, 1));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -262,6 +305,7 @@ ResultSet rs;
         jLabel14.setText("KATEGORI          :");
         jLabel14.setToolTipText("");
 
+        cbkategori.setEditable(true);
         cbkategori.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         cbkategori.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -533,7 +577,8 @@ int barisTabel = tblpelanggaran.getRowCount();
   // Validasi input
     String nisn = txtnisn.getText().trim();
     String nama = txtnama.getText().trim();
-    String kategori = cbkategori.getSelectedItem().toString();
+    Object item = cbkategori.getSelectedItem();
+    String kategori = (item == null) ? "" : item.toString().trim();
     String keterangan = txtketerangan.getText().trim();
     
     if (nisn.isEmpty()) {
@@ -551,7 +596,7 @@ int barisTabel = tblpelanggaran.getRowCount();
         return;
     }
     
-    if (cbkategori.getSelectedIndex() == 0 || kategori.equals("-- Pilih Kategori --")) {
+    if (kategori.isEmpty() || kategori.equals("-- Pilih Kategori --")) {
         JOptionPane.showMessageDialog(this, "Pilih kategori pelanggaran!", "Peringatan", JOptionPane.WARNING_MESSAGE);
         return;
     }
