@@ -377,6 +377,11 @@ ResultSet rs;
                 return canEdit [columnIndex];
             }
         });
+        tblpelanggaran.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblpelanggaranMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tblpelanggaran);
         if (tblpelanggaran.getColumnModel().getColumnCount() > 0) {
             tblpelanggaran.getColumnModel().getColumn(0).setResizable(false);
@@ -471,7 +476,35 @@ ResultSet rs;
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtcarisiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcarisiswaActionPerformed
-        // TODO add your handling code here:
+int barisTabel = tblpelanggaran.getRowCount();
+        
+        if (barisTabel == 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Tabel kosong! Cari nama atau NIS siswa terlebih dahulu.", "Info", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Mengambil Index 1 (Nama Siswa) untuk dijadikan Judul Pop-up
+        String namaSiswa = tblpelanggaran.getValueAt(0, 1).toString();
+
+        java.util.HashMap<String, Integer> rekap = new java.util.HashMap<>();
+
+        for (int i = 0; i < barisTabel; i++) {
+            // Mengambil Index 3 (Kategori) untuk dihitung
+            String kategori = tblpelanggaran.getValueAt(i, 3).toString();
+            
+            rekap.put(kategori, rekap.getOrDefault(kategori, 0) + 1);
+        }
+
+        StringBuilder teksRiwayat = new StringBuilder();
+        teksRiwayat.append("Rekap Pelanggaran : ").append(namaSiswa).append("\n");
+        teksRiwayat.append("--------------------------------------------------\n");
+
+        for (java.util.Map.Entry<String, Integer> entry : rekap.entrySet()) {
+            teksRiwayat.append("• ").append(entry.getKey()).append(" : ")
+                       .append(entry.getValue()).append(" kali\n");
+        }
+
+        javax.swing.JOptionPane.showMessageDialog(this, teksRiwayat.toString(), "Riwayat Siswa", javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_txtcarisiswaActionPerformed
 
     private void bsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bsimpanActionPerformed
@@ -609,6 +642,23 @@ ResultSet rs;
     private void cbkategoriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbkategoriActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbkategoriActionPerformed
+
+    private void tblpelanggaranMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblpelanggaranMouseClicked
+   int baris = tblpelanggaran.getSelectedRow();
+        
+        // Memastikan ada baris yang valid diklik (mencegah error jika bernilai -1)
+        if (baris != -1) {
+            // Mengambil data Nama Siswa yang berada di kolom kedua (Index 1)
+            String namaSiswa = tblpelanggaran.getValueAt(baris, 1).toString();
+            
+            // Memasukkan teks nama tersebut ke dalam kotak pencarian
+            txtcarisiswa.setText(namaSiswa);
+            
+            // Langsung memicu fungsi pembaruan tabel agar data otomatis tersaring 
+            // hanya untuk siswa tersebut tanpa perlu menekan Enter lagi
+            datatable(); 
+        }
+    }//GEN-LAST:event_tblpelanggaranMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bbatal;
