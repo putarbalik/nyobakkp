@@ -161,7 +161,7 @@ private String[] daftarKategori = {
         while (hasil.next()) {
             tabmode.addRow(new Object[]{
                 hasil.getString("nis"),
-                hasil.getString("nama"),
+                hasil.getString("nama_siswa"),
                 hasil.getDate("tgl_pelanggaran"),
                 hasil.getString("kategori_pelanggaran"),
                 hasil.getString("keterangan")
@@ -181,44 +181,67 @@ private String[] daftarKategori = {
         
         private void loadcombo() {
         cbkategori.removeAllItems();
-        cbkategori.addItem("-- Pilih Kategori --");
+        cbkategori.addItem("");
         for (String k : daftarKategori) {
             cbkategori.addItem(k);
         }
     }
         
         private void aturAutocomplete() {
-            javax.swing.text.JTextComponent editor =
-            (javax.swing.text.JTextComponent) cbkategori.getEditor().getEditorComponent();
+    // Mendapatkan komponen teks di dalam JComboBox
+    final javax.swing.JTextField editor = 
+        (javax.swing.JTextField) cbkategori.getEditor().getEditorComponent();
 
-        editor.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-         public void insertUpdate(javax.swing.event.DocumentEvent e)  { filterLater(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e)  { filterLater(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {}
-         });
+    editor.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyReleased(java.awt.event.KeyEvent evt) {
+            // Ambil tombol yang ditekan
+            int keyCode = evt.getKeyCode();
+
+            // Abaikan tombol panah, enter, dan shift agar navigasi tidak terganggu
+            if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_DOWN 
+                || keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SHIFT) {
+                return;
+            }
+
+            // Jalankan filter
+            filterKategori(editor.getText());
+        }
+    });
 }
 
-        private void filterLater() {
-             javax.swing.SwingUtilities.invokeLater(new Runnable() {
-             public void run() {
-                String ketik = ((javax.swing.JTextField) cbkategori.getEditor().getEditorComponent())
-                             .getText().toLowerCase().trim();
-                javax.swing.DefaultComboBoxModel<String> model =
-                    (javax.swing.DefaultComboBoxModel<String>) cbkategori.getModel();
+private void filterKategori(String ketik) {
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        String teksPencarian = ketik.toLowerCase().trim();
+        javax.swing.DefaultComboBoxModel<String> model = 
+            (javax.swing.DefaultComboBoxModel<String>) cbkategori.getModel();
 
-                model.removeAllElements();
-                model.addElement("-- Pilih Kategori --");
+        // Kosongkan model saat ini
+        model.removeAllElements();
+        
+        // Selalu tambahkan opsi default di paling atas
+        model.addElement("-- Pilih Kategori --");
 
-            for (String k : daftarKategori) {
-                if (ketik.isEmpty() || k.toLowerCase().contains(ketik)) {
-                    model.addElement(k);
-                }
+        boolean adaHasil = false;
+
+        // Cari kecocokan dari daftarKategori
+        for (String k : daftarKategori) {
+            if (teksPencarian.isEmpty() || k.toLowerCase().contains(teksPencarian)) {
+                model.addElement(k);
+                adaHasil = true;
             }
-            if (!ketik.isEmpty() && model.getSize() == 1) {
-                model.addElement(ketik);
-            }
+        }
 
-            cbkategori.setSelectedIndex(-1);
+        // Kembalikan teks yang sedang diketik user agar tidak terhapus
+        javax.swing.JTextField editor = 
+            (javax.swing.JTextField) cbkategori.getEditor().getEditorComponent();
+        editor.setText(ketik);
+
+        // Jika ada hasil dan user sedang mengetik, buka pop-up dropdown-nya
+        if (adaHasil && !ketik.isEmpty()) {
+            cbkategori.showPopup();
+        } else if (ketik.isEmpty()) {
+            cbkategori.hidePopup();
         }
     });
 }
@@ -255,6 +278,7 @@ private String[] daftarKategori = {
         tblpelanggaran = new javax.swing.JTable();
         bbatal = new javax.swing.JButton();
         bsimpan = new javax.swing.JButton();
+        brepot = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(214647, 2147483647));
 
@@ -478,8 +502,8 @@ private String[] daftarKategori = {
                     .addComponent(jLabel10)
                     .addComponent(txtcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         bbatal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -498,23 +522,27 @@ private String[] daftarKategori = {
             }
         });
 
+        brepot.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        brepot.setText("CETAK");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(52, 52, 52)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(41, 41, 41))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(brepot, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(bsimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
                                 .addComponent(bbatal, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE))
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(28, 28, 28)
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
@@ -535,6 +563,8 @@ private String[] daftarKategori = {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(bsimpan)
                             .addComponent(bbatal))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(brepot, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -730,6 +760,7 @@ int barisTabel = tblpelanggaran.getRowCount();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bbatal;
     private javax.swing.JButton bcarisiswa;
+    private javax.swing.JButton brepot;
     private javax.swing.JButton bsimpan;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbkategori;
