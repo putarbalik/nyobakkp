@@ -11,6 +11,11 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.KeyEvent;
 import koneksi.koneksi;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 /**
  *
  * @author User
@@ -190,6 +195,7 @@ public class menu_siswa extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbldatasiswa = new javax.swing.JTable();
         cbklsfilter = new javax.swing.JComboBox<>();
+        bimport = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -311,7 +317,7 @@ public class menu_siswa extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel11)
                     .addComponent(cbkls, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 419, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 441, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                     .addComponent(bsimpan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(bubah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -368,7 +374,7 @@ public class menu_siswa extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tbldatasiswa);
 
-        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 81, 1210, 570));
+        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 81, 1210, 550));
 
         cbklsfilter.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         cbklsfilter.addActionListener(new java.awt.event.ActionListener() {
@@ -377,6 +383,15 @@ public class menu_siswa extends javax.swing.JInternalFrame {
             }
         });
         jPanel2.add(cbklsfilter, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 40, 205, -1));
+
+        bimport.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        bimport.setText("Import");
+        bimport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bimportActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bimport, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 650, 1220, 30));
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 48)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -404,8 +419,8 @@ public class menu_siswa extends javax.swing.JInternalFrame {
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 668, Short.MAX_VALUE))
-                .addContainerGap(67, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         pack();
@@ -547,11 +562,77 @@ public class menu_siswa extends javax.swing.JInternalFrame {
         datatable();
     }//GEN-LAST:event_cbklsfilterActionPerformed
 
+    private void bimportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bimportActionPerformed
+    // 1. Membuka Jendela Pemilihan File (File Chooser)
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Pilih File CSV Data Siswa");
+    
+    // Filter agar hanya file .csv yang bisa dipilih
+    FileNameExtensionFilter filter = new FileNameExtensionFilter("File CSV (*.csv)", "csv");
+    fileChooser.setFileFilter(filter);
+
+    // Menangkap respon user (apakah klik Open atau Cancel)
+    int userSelection = fileChooser.showOpenDialog(this);
+
+    if (userSelection == JFileChooser.APPROVE_OPTION) {
+        File fileToRead = fileChooser.getSelectedFile();
+        
+        // 2. Membaca isi file menggunakan BufferedReader
+        try (BufferedReader br = new BufferedReader(new FileReader(fileToRead))) {
+            String line;
+            
+            // Kita gunakan INSERT IGNORE agar jika ada NIS yang duplikat (Primary Key), 
+            // sistem tidak error/crash, melainkan melewati baris tersebut.
+            String sql = "INSERT IGNORE INTO tbl_siswa (nis, nama_siswa, jkel, kelas) VALUES (?, ?, ?, ?)";
+            PreparedStatement stat = con.prepareStatement(sql);
+            
+            int count = 0;
+            boolean isFirstLine = true; 
+            
+            // Looping untuk membaca file baris demi baris
+            while ((line = br.readLine()) != null) {
+                // Lewati baris pertama jika CSV Anda memiliki Header (misal: "NIS,Nama,JK,Kelas")
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                
+                // Pisahkan teks berdasarkan koma (,) atau titik koma (;) - sesuaikan dengan CSV Anda
+                String[] data = line.split("[,;]"); 
+                
+                // Pastikan baris memiliki 4 kolom untuk menghindari ArrayOutOfBoundsException
+                if (data.length >= 4) { 
+                    stat.setString(1, data[0].trim()); // NIS
+                    stat.setString(2, data[1].trim()); // Nama
+                    stat.setString(3, data[2].trim()); // Jkel (L/P) - pastikan di CSV isinya cuma huruf 'L' atau 'P'
+                    stat.setString(4, data[3].trim()); // Kelas
+                    
+                    // Masukkan query ke dalam antrian eksekusi (Batch)
+                    stat.addBatch(); 
+                    count++;
+                }
+            }
+            
+            // 3. Eksekusi semua antrian SQL sekaligus ke database
+            stat.executeBatch(); 
+            JOptionPane.showMessageDialog(null, "Berhasil mengimpor " + count + " data siswa baru!");
+            
+            // 4. Refresh tampilan tabel GUI agar data langsung muncul
+            kosong();
+            datatable(); 
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal import data: " + e.getMessage());
+        }
+    }
+    }//GEN-LAST:event_bimportActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bbatal;
     private javax.swing.JButton bcari;
     private javax.swing.JButton bhapus;
+    private javax.swing.JButton bimport;
     private javax.swing.JButton bsimpan;
     private javax.swing.JButton bubah;
     private javax.swing.JComboBox<String> cbjk;
