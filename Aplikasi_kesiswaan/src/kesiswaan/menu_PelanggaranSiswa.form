@@ -137,7 +137,7 @@
                               <Component id="jLabel16" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtnisn" pref="292" max="32767" attributes="0"/>
+                          <Component id="txtnis" pref="292" max="32767" attributes="0"/>
                           <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                           <Component id="bcarisiswa" min="-2" pref="99" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
@@ -153,7 +153,7 @@
                   <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtnisn" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="txtnis" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                       <Component id="bcarisiswa" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -201,9 +201,9 @@
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtnisn">
+        <Component class="javax.swing.JTextField" name="txtnis">
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtnisnActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtnisActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="bcarisiswa">

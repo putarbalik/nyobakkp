@@ -104,7 +104,7 @@ private String[] daftarKategori = {
     }
     
     protected void kosong(){
-       txtnisn.setText("");
+       txtnis.setText("");
        txtnama.setText("");
        txtkelas.setText("");
        txtketerangan.setText("");
@@ -118,7 +118,7 @@ private String[] daftarKategori = {
     
       protected void datatable() {
     String[] baris = {
-        "NISN",
+        "NIS",
         "Nama Siswa",
         "Tanggal",
         "Kategori Pelanggaran",
@@ -138,15 +138,15 @@ private String[] daftarKategori = {
 
     try {
         String sql = "SELECT "
-                + "p.nisn, "
-                + "s.nama, "
+                + "p.nis, "
+                + "s.nama_siswa, "
                 + "p.tgl_pelanggaran, "
                 + "p.kategori_pelanggaran, "
                 + "p.keterangan "
                 + "FROM tbl_pelanggaran p "
-                + "JOIN tbl_siswa s ON p.nisn = s.nisn "
-                + "WHERE p.nisn LIKE ? "
-                + "OR s.nama LIKE ? "
+                + "JOIN tbl_siswa s ON p.nis = s.nis "
+                + "WHERE p.nis LIKE ? "
+                + "OR s.nama_siswa LIKE ? "
                 + "OR p.kategori_pelanggaran LIKE ? "
                 + "ORDER BY p.tgl_pelanggaran DESC";
 
@@ -160,7 +160,7 @@ private String[] daftarKategori = {
 
         while (hasil.next()) {
             tabmode.addRow(new Object[]{
-                hasil.getString("nisn"),
+                hasil.getString("nis"),
                 hasil.getString("nama"),
                 hasil.getDate("tgl_pelanggaran"),
                 hasil.getString("kategori_pelanggaran"),
@@ -235,7 +235,7 @@ private String[] daftarKategori = {
         jPanel1 = new javax.swing.JPanel();
         tglIinput = new com.toedter.calendar.JDateChooser();
         jLabel9 = new javax.swing.JLabel();
-        txtnisn = new javax.swing.JTextField();
+        txtnis = new javax.swing.JTextField();
         bcarisiswa = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         txtnama = new javax.swing.JTextField();
@@ -258,16 +258,16 @@ private String[] daftarKategori = {
 
         setMaximumSize(new java.awt.Dimension(214647, 2147483647));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Input", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(2, 2, 2))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Input", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 16), new java.awt.Color(2, 2, 2))); // NOI18N
         jPanel1.setForeground(new java.awt.Color(1, 1, 1));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel9.setText("TANGGAL           :");
         jLabel9.setToolTipText("");
 
-        txtnisn.addActionListener(new java.awt.event.ActionListener() {
+        txtnis.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtnisnActionPerformed(evt);
+                txtnisActionPerformed(evt);
             }
         });
 
@@ -362,7 +362,7 @@ private String[] daftarKategori = {
                             .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(txtnisn, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                        .addComponent(txtnis, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(bcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1)))
@@ -374,7 +374,7 @@ private String[] daftarKategori = {
                 .addGap(29, 29, 29)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
-                    .addComponent(txtnisn, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtnis, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -575,13 +575,13 @@ int barisTabel = tblpelanggaran.getRowCount();
 
     private void bsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bsimpanActionPerformed
   // Validasi input
-    String nisn = txtnisn.getText().trim();
+    String nis = txtnis.getText().trim();
     String nama = txtnama.getText().trim();
     Object item = cbkategori.getSelectedItem();
     String kategori = (item == null) ? "" : item.toString().trim();
     String keterangan = txtketerangan.getText().trim();
     
-    if (nisn.isEmpty()) {
+    if (nis.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Masukkan NIS terlebih dahulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
         return;
     }
@@ -625,7 +625,7 @@ int barisTabel = tblpelanggaran.getRowCount();
                    + "VALUES (?, ?, ?, ?)";
         
         PreparedStatement pst = con.prepareStatement(sql);
-        pst.setString(1, nisn);
+        pst.setString(1, nis);
         pst.setDate(2, sqlDate);
         pst.setString(3, kategori); // Menyimpan teks "Terlambat", "Bolos", dll secara langsung
         pst.setString(4, keterangan);
@@ -664,9 +664,9 @@ int barisTabel = tblpelanggaran.getRowCount();
     }//GEN-LAST:event_txtcarisiswaKeyPressed
 
     private void bcarisiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bcarisiswaActionPerformed
-         String nisn = txtnisn.getText().trim();
+         String nis = txtnis.getText().trim();
     
-    if (nisn.isEmpty()) {
+    if (nis.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Masukkan NISN terlebih dahulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
         return;
     }
@@ -676,7 +676,7 @@ int barisTabel = tblpelanggaran.getRowCount();
         String sql = "SELECT nama_siswa, kelas FROM tbl_siswa WHERE nis = ?";
         
         PreparedStatement pst = con.prepareStatement(sql);
-        pst.setString(1, nisn);
+        pst.setString(1, nis);
         ResultSet rs = pst.executeQuery();
         
         if (rs.next()) {
@@ -684,7 +684,7 @@ int barisTabel = tblpelanggaran.getRowCount();
             txtnama.setText(rs.getString("nama_siswa"));
             txtkelas.setText(rs.getString("kelas"));
         } else {
-            JOptionPane.showMessageDialog(this, "Siswa dengan NISN " + nisn + " tidak ditemukan", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Siswa dengan NISN " + nis + " tidak ditemukan", "Peringatan", JOptionPane.WARNING_MESSAGE);
             txtnama.setText("");
             txtkelas.setText("");
         }
@@ -694,9 +694,9 @@ int barisTabel = tblpelanggaran.getRowCount();
     }
     }//GEN-LAST:event_bcarisiswaActionPerformed
 
-    private void txtnisnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnisnActionPerformed
+    private void txtnisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnisActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtnisnActionPerformed
+    }//GEN-LAST:event_txtnisActionPerformed
 
     private void txtkelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtkelasActionPerformed
         // TODO add your handling code here:
@@ -751,6 +751,6 @@ int barisTabel = tblpelanggaran.getRowCount();
     private javax.swing.JTextField txtkelas;
     private javax.swing.JTextArea txtketerangan;
     private javax.swing.JTextField txtnama;
-    private javax.swing.JTextField txtnisn;
+    private javax.swing.JTextField txtnis;
     // End of variables declaration//GEN-END:variables
 }
