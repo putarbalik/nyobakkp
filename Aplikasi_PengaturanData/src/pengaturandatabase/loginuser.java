@@ -20,16 +20,12 @@ import koneksi.koneksi;
  * @author ACER
  */
 public class loginuser extends javax.swing.JFrame {
-
-    /**
-     * Creates new form loginuser
-     */
-    
-    Connection con=koneksi.getConnection();
+    Connection conn;
     PreparedStatement pet;
     ResultSet rs;
     public loginuser() {
         initComponents();
+        conn = koneksi.getKoneksi();
         setExtendedState(JFrame.MAXIMIZED_HORIZ);
            setVisible(true);
            setResizable(false);
@@ -233,7 +229,7 @@ public class loginuser extends javax.swing.JFrame {
         nip.requestFocus();
         try {
             String sql = "SELECT * FROM users WHERE nip=? AND password=?"; 
-            java.sql.Connection conn = new koneksi().getConnection();
+            java.sql.Connection conn = new koneksi().getKoneksi();
             java.sql.PreparedStatement pst = conn.prepareStatement(sql);
 
             pst.setString(1, nip.getText()); 

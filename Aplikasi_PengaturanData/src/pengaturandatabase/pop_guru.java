@@ -32,7 +32,7 @@ public class pop_guru extends javax.swing.JFrame {
     model.addColumn("Nama Guru");
     try {
         String sql = "SELECT kd_guru, nama FROM guru";
-        java.sql.Connection conn = (Connection)koneksi.getConnection();
+        java.sql.Connection conn = (Connection)koneksi.getKoneksi();
         java.sql.Statement stm = conn.createStatement();
         java.sql.ResultSet res = stm.executeQuery(sql);
         while(res.next()) {

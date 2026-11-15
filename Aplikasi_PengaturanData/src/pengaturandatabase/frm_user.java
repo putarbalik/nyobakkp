@@ -18,13 +18,14 @@ import koneksi.koneksi;
  * @author User
  */
 public class frm_user extends javax.swing.JFrame {
-    private Connection conn = new koneksi().getConnection();
+    private Connection conn;
     private DefaultTableModel tabmode;
     /**
      * Creates new form 
      */
     public frm_user() {
         initComponents();
+        conn = koneksi.getKoneksi();
          bsimpan.setIcon(new ImageIcon(
     new ImageIcon(getClass().getResource("/resource/save.png"))
         .getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));

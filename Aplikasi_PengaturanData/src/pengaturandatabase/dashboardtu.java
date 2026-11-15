@@ -26,7 +26,7 @@ import koneksi.koneksi;
  * @author faisa
  */
 public class dashboardtu extends javax.swing.JFrame {
-private Connection conn = new koneksi().getConnection();
+private Connection conn; // Biarkan kosong di sini
     /**
      * Creates new form dashboardtu
      */
@@ -35,6 +35,7 @@ private Connection conn = new koneksi().getConnection();
     public dashboardtu() {
         com.formdev.flatlaf.FlatLightLaf.setup();
         initComponents();
+        conn = koneksi.getKoneksi();
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         scaleImage(); 
        

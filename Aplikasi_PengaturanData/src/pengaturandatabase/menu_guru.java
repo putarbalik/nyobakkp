@@ -12,11 +12,12 @@ import java.awt.event.KeyEvent;
 import koneksi.koneksi;
 
 public class menu_guru extends javax.swing.JInternalFrame {
-    private Connection conn = new koneksi().getConnection();
+    private Connection conn;
     private DefaultTableModel tabmode;
 
     public menu_guru() {
         initComponents();
+        conn = koneksi.getKoneksi();
         javax.swing.plaf.basic.BasicInternalFrameUI ui = (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
         kosong();

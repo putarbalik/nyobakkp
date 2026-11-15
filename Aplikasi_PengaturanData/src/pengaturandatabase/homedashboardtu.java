@@ -17,13 +17,14 @@ import koneksi.koneksi;
  * @author User
  */
 public class homedashboardtu extends javax.swing.JInternalFrame {
-    private Connection conn = new koneksi().getConnection();
+    private Connection conn;
 
     /**
      * Creates new form homedashboardtu
      */
     public homedashboardtu() {
         initComponents();
+        conn = koneksi.getKoneksi();
         tampilkanDiagramSiswa();
         tampilkanTotalGuru();
     }
@@ -34,7 +35,7 @@ public class homedashboardtu extends javax.swing.JInternalFrame {
 
     try {
         if (this.conn == null || this.conn.isClosed()) {
-            this.conn = new koneksi().getConnection(); 
+            this.conn = new koneksi().getKoneksi(); 
         }
         
         String sql = "SELECT jkel, COUNT(*) as jumlah FROM tbl_siswa GROUP BY jkel";
@@ -85,7 +86,7 @@ public class homedashboardtu extends javax.swing.JInternalFrame {
 public void tampilkanTotalGuru() {
     try {
         if (this.conn == null || this.conn.isClosed()) {
-            this.conn = new koneksi().getConnection(); 
+            this.conn = new koneksi().getKoneksi(); 
         }
 
         // Ambil total guru dari database

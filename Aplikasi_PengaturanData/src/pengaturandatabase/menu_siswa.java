@@ -21,7 +21,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author User
  */
 public class menu_siswa extends javax.swing.JInternalFrame {
-    private Connection con = koneksi.getConnection();
+    private Connection con;
     private DefaultTableModel tabmode;
 
     private void pasangIkon(javax.swing.JButton tombol, String pathGbr) {
@@ -40,6 +40,7 @@ public class menu_siswa extends javax.swing.JInternalFrame {
     }
     public menu_siswa() {
         initComponents();
+        con = koneksi.getKoneksi();
         loadKelasOtomatis();
         javax.swing.plaf.basic.BasicInternalFrameUI ui = (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
@@ -84,29 +85,38 @@ public class menu_siswa extends javax.swing.JInternalFrame {
         bubah.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         bhapus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         bbatal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
+        loadKelasOtomatis();
         kosong();
         aktif();
         datatable();
     }
     private void loadKelasOtomatis() {
-    cbkls.removeAllItems();
-    cbkls.addItem("-- Pilih Kelas --");
-    
-    cbklsfilter.removeAllItems();
-    cbklsfilter.addItem("-- Semua Kelas --");
-    
-    String[] tingkat = {"VII", "VIII", "IX"};
-    String[] ruang = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
-    
-    for (String t : tingkat) {
-        for (String r : ruang) {
-            String namaKelas = t + "." + r;
-            cbkls.addItem(namaKelas);
-            cbklsfilter.addItem(namaKelas);
+        cbkls.removeAllItems();
+        cbkls.addItem("-- Pilih Kelas --");
+        
+        cbklsfilter.removeAllItems();
+        cbklsfilter.addItem("-- Semua Kelas --");
+        
+        String[] tingkat = {"VII", "VIII", "IX"};
+        
+        for (String t : tingkat) {
+            // Tentukan huruf terakhir untuk masing-masing tingkat kelas
+            char batasRuang = 'J'; // Default batas untuk kelas VII (A sampai J)
+            
+            if (t.equals("VIII")) {
+                batasRuang = 'H';  // Batas untuk kelas VIII (A sampai H)
+            } else if (t.equals("IX")) {
+                batasRuang = 'G';  // Batas untuk kelas IX (A sampai G)
+            }
+            
+            // Looping otomatis berurutan abjad dari huruf 'A' sampai batas huruf di atas
+            for (char r = 'A'; r <= batasRuang; r++) {
+                String namaKelas = t + "." + r;
+                cbkls.addItem(namaKelas);
+                cbklsfilter.addItem(namaKelas);
+            }
         }
     }
-}
 
     protected void aktif() {
         txtnis.requestFocus();
@@ -165,7 +175,8 @@ public class menu_siswa extends javax.swing.JInternalFrame {
                 hasil.getString("kelas")
             });
         }
-
+        hasil.close();
+        stat.close();
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Data gagal dipanggil: " + e);
     }
@@ -441,43 +452,84 @@ public class menu_siswa extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_bcariActionPerformed
 
     private void bsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bsimpanActionPerformed
-      if (txtnis.getText().equals("") || txtnm.getText().equals("") || cbkls.getSelectedItem() == null) {
-            JOptionPane.showMessageDialog(null, "Data belum lengkap!");
-            return;
-        }
+     // 1. Membuka Jendela Pemilihan File (File Chooser)
+        javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+        fileChooser.setDialogTitle("Pilih File CSV Data Siswa");
         
-        if (cbjk.getSelectedIndex() == -1) {
-            JOptionPane.showMessageDialog(null, "Pilih jenis kelamin!");
-            return;
-        }
-        
-        try {
-            String sql = "INSERT INTO tbl_siswa (nis, nama_siswa, jkel, kelas) VALUES (?,?,?,?)";
-            PreparedStatement stat = con.prepareStatement(sql);
+        // Filter agar hanya file .csv yang bisa dipilih
+        javax.swing.filechooser.FileNameExtensionFilter filter = new javax.swing.filechooser.FileNameExtensionFilter("File CSV (*.csv)", "csv");
+        fileChooser.setFileFilter(filter);
 
-            stat.setString(1, txtnis.getText());
-            stat.setString(2, txtnm.getText());
+        // Menangkap respon user (apakah klik Open atau Cancel)
+        int userSelection = fileChooser.showOpenDialog(this);
+
+        if (userSelection == javax.swing.JFileChooser.APPROVE_OPTION) {
+            java.io.File fileToRead = fileChooser.getSelectedFile();
             
-            // Konversi Laki - Laki / Perempuan jadi L atau P sesuai tipe data enum di sql
-            String jk = cbjk.getSelectedItem().toString();
-            if (jk.equals("Laki - Laki")) {
-                stat.setString(3, "L");
-            } else {
-                stat.setString(3, "P");
+            // 2. Membaca isi file menggunakan BufferedReader
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(fileToRead))) {
+                String line;
+                
+                // Gunakan INSERT OR IGNORE khas SQLite agar NIS kembar dilewati
+                String sql = "INSERT OR IGNORE INTO tbl_siswa (nis, nama_siswa, jkel, kelas) VALUES (?, ?, ?, ?)";
+                java.sql.PreparedStatement stat = con.prepareStatement(sql);
+                
+                // --- FITUR TRANSAKSI: MATIKAN AUTO-COMMIT AGAR TIDAK MENGUNCI DATABASE ---
+                con.setAutoCommit(false);
+                
+                int count = 0;
+                boolean isFirstLine = true; 
+                
+                // Looping untuk membaca file baris demi baris
+                while ((line = br.readLine()) != null) {
+                    // Lewati baris pertama jika CSV Anda memiliki Header (misal: "NIS,Nama,JK,Kelas")
+                    if (isFirstLine) {
+                        isFirstLine = false;
+                        continue;
+                    }
+                    
+                    // Pisahkan teks berdasarkan koma (,) atau titik koma (;) - sesuaikan dengan CSV Anda
+                    String[] data = line.split("[,;]"); 
+                    
+                    // Pastikan baris memiliki 4 kolom untuk menghindari ArrayOutOfBoundsException
+                    if (data.length >= 4) { 
+                        stat.setString(1, data[0].trim()); // NIS
+                        stat.setString(2, data[1].trim()); // Nama
+                        stat.setString(3, data[2].trim()); // Jkel (L/P) 
+                        stat.setString(4, data[3].trim()); // Kelas
+                        
+                        // Masukkan query ke dalam antrian eksekusi (Batch)
+                        stat.addBatch(); 
+                        count++;
+                    }
+                }
+                
+                // 3. Eksekusi semua antrian SQL sekaligus ke database (HANYA 1 KALI PROSES)
+                stat.executeBatch(); 
+                
+                // --- SIMPAN PERMANEN LALU NYALAKAN LAGI AUTO-COMMIT ---
+                con.commit();
+                con.setAutoCommit(true);
+                stat.close();
+                
+                javax.swing.JOptionPane.showMessageDialog(null, "Berhasil mengimpor " + count + " data siswa baru!");
+                
+                // 4. Refresh tampilan tabel GUI agar data langsung muncul
+                kosong();
+                datatable(); 
+                
+            } catch (Exception e) {
+                // Jika terjadi error (misal format salah), kembalikan status auto-commit agar tidak error berantai
+                try {
+                    if (con != null) {
+                        con.setAutoCommit(true);
+                    }
+                } catch (java.sql.SQLException ex) {
+                    System.err.println("Gagal reset auto-commit: " + ex.getMessage());
+                }
+                javax.swing.JOptionPane.showMessageDialog(null, "Gagal import data: " + e.getMessage());
             }
-            
-            stat.setString(4, cbkls.getSelectedItem().toString());
-
-            stat.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
-
-            kosong();
-            datatable();
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Gagal simpan: " + e);
         }
-        txtnis.requestFocus();
     }//GEN-LAST:event_bsimpanActionPerformed
 
     private void bubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bubahActionPerformed
@@ -583,7 +635,7 @@ public class menu_siswa extends javax.swing.JInternalFrame {
             
             // Kita gunakan INSERT IGNORE agar jika ada NIS yang duplikat (Primary Key), 
             // sistem tidak error/crash, melainkan melewati baris tersebut.
-            String sql = "INSERT IGNORE INTO tbl_siswa (nis, nama_siswa, jkel, kelas) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT OR IGNORE INTO tbl_siswa (nis, nama_siswa, jkel, kelas) VALUES (?, ?, ?, ?)";
             PreparedStatement stat = con.prepareStatement(sql);
             
             int count = 0;
@@ -617,6 +669,7 @@ public class menu_siswa extends javax.swing.JInternalFrame {
             stat.executeBatch(); 
             JOptionPane.showMessageDialog(null, "Berhasil mengimpor " + count + " data siswa baru!");
             
+            stat.close();
             // 4. Refresh tampilan tabel GUI agar data langsung muncul
             kosong();
             datatable(); 
