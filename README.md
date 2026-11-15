@@ -7,7 +7,8 @@ cara jalanin tanpa netbeans
   5. taruh juga file dbsekolah.db didalam folder dist tersebut.
 maka susunan tampilannya akan sebagai berikut:
 
-Dist-
+Dist
+
   |--lib
   |--Aplikasi_kesiswaan.jar
   |--Aplikasi_manajemenData.jar
