@@ -5,36 +5,28 @@
  */
 package koneksi;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import javax.swing.JOptionPane; // Pastikan import ini ada
 
-/**
- *
- * @author ACER
- */
 public class koneksi {
-public static Connection con;
-    public static Statement stm;
-    
-    private static Connection connection = null;
-    
-        public static Connection getConnection(){
-            if (connection == null) {
-                MysqlDataSource data = new MysqlDataSource();
-                data.setDatabaseName("dbsekolah_test");
-                data.setUser("root");
-                data.setPassword("");
-                try{
-                    connection = data.getConnection();
-                    System.out.println("Koneksi Sukses");
-                } catch (SQLException se) {
-                    System.out.println("Koneksi gagal " + se);
-                }
+    public static Connection getKoneksi() {
+        Connection conn = null;
+        try {
+            // Sesuaikan nama file databasemu (pakai .db atau tidak, tergantung aslinya)
+            String url = "jdbc:sqlite:dbsekolah.db"; 
+            conn = DriverManager.getConnection(url);
+            
+            // Tes apakah koneksi berhasil
+            if (conn != null) {
+                // Pesan ini bisa dihapus nanti kalau aplikasinya sudah normal
+                System.out.println("Koneksi Berhasil!");
             }
-            return connection;         
+        } catch (Exception e) {
+            // Jika gagal, aplikasi akan memunculkan kotak dialog error di layar
+            JOptionPane.showMessageDialog(null, "Koneksi Gagal: " + e.getMessage());
         }
+        return conn;
     }
+}
     

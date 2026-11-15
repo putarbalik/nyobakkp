@@ -39,7 +39,7 @@ public class homedashboardkesiswaan extends javax.swing.JInternalFrame {
     }
     
     public void tampilkanGrafik() {
-        Connection conn = koneksi.getConnection();
+        Connection conn = koneksi.getKoneksi();
         if (conn == null) {
             System.err.println("Koneksi gagal, grafik tidak dapat dimuat.");
             return;
@@ -53,9 +53,9 @@ public class homedashboardkesiswaan extends javax.swing.JInternalFrame {
         int[] dataBulan = new int[12];
         int maxKasus = 0;
 
-        String sqlLine = "SELECT MONTH(tgl_pelanggaran) as bulan, COUNT(*) as jumlah "
-                       + "FROM tbl_pelanggaran WHERE YEAR(tgl_pelanggaran) = YEAR(CURDATE()) "
-                       + "GROUP BY MONTH(tgl_pelanggaran)";
+        String sqlLine = "SELECT CAST(strftime('%m', tgl_pelanggaran) AS INTEGER) as bulan, COUNT(*) as jumlah "
+                       + "FROM tbl_pelanggaran WHERE strftime('%Y', tgl_pelanggaran) = strftime('%Y', 'now', 'localtime') "
+                       + "GROUP BY strftime('%m', tgl_pelanggaran)";
 
         try (PreparedStatement ps = conn.prepareStatement(sqlLine);
              ResultSet rs = ps.executeQuery()) {
@@ -191,7 +191,7 @@ public class homedashboardkesiswaan extends javax.swing.JInternalFrame {
         tblpelanggaran.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
         tblpelanggaran.setRowHeight(30);
 
-        Connection conn = koneksi.getConnection();
+        Connection conn = koneksi.getKoneksi();
         if (conn == null) return;
 
         // Menggunakan perintah JOIN untuk menarik kolom 'nama' dari tbl_siswa
@@ -227,7 +227,7 @@ public class homedashboardkesiswaan extends javax.swing.JInternalFrame {
     
     
     public void tampilkanAngkaRingkasan() {
-    Connection conn = koneksi.getConnection();
+    Connection conn = koneksi.getKoneksi();
 
     if (conn == null) {
         lbl_angkaSiswa.setText("Koneksi gagal");
@@ -250,7 +250,7 @@ public class homedashboardkesiswaan extends javax.swing.JInternalFrame {
     String sqlPelanggaran =
             "SELECT COUNT(*) AS total "
           + "FROM tbl_pelanggaran "
-          + "WHERE DATE(tgl_pelanggaran) = CURDATE()";
+          + "WHERE DATE(tgl_pelanggaran) = date('now', 'localtime')";
 
     try (PreparedStatement ps = conn.prepareStatement(sqlPelanggaran);
          ResultSet rs = ps.executeQuery()) {

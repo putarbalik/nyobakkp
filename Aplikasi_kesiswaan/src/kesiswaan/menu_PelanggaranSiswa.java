@@ -26,7 +26,7 @@ import net.sf.jasperreports.view.JasperViewer;
  * @author ACER
  */
 public class menu_PelanggaranSiswa extends javax.swing.JInternalFrame {
-private Connection con = new koneksi().getConnection();
+private Connection con;
 private DefaultTableModel tabmode;
 PreparedStatement ps;
 ResultSet rs;
@@ -80,6 +80,7 @@ private String[] daftarKategori = {
      */
     public menu_PelanggaranSiswa() {
         initComponents();
+        con = new koneksi().getKoneksi();
         javax.swing.plaf.basic.BasicInternalFrameUI ui = (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
     ui.setNorthPane(null);
         // Bungkus seluruh isi form dengan scroll pane
@@ -162,7 +163,7 @@ private String[] daftarKategori = {
             tabmode.addRow(new Object[]{
                 hasil.getString("nis"),
                 hasil.getString("nama_siswa"),
-                hasil.getDate("tgl_pelanggaran"),
+                hasil.getString("tgl_pelanggaran"),
                 hasil.getString("kategori_pelanggaran"),
                 hasil.getString("keterangan")
             });
@@ -636,8 +637,9 @@ int barisTabel = tblpelanggaran.getRowCount();
         return;
     }
     
-    java.sql.Date sqlDate = new java.sql.Date(tglIinput.getDate().getTime());
-    
+    // Konversi tanggal kalender JDateChooser ke teks YYYY-MM-DD
+    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+    String tglFormat = sdf.format(tglIinput.getDate());
     int konfirmasi = JOptionPane.showConfirmDialog(this, 
             "Apakah Anda yakin data pelanggaran sudah benar dan ingin disimpan?", 
             "Konfirmasi Simpan", 
@@ -656,7 +658,7 @@ int barisTabel = tblpelanggaran.getRowCount();
         
         PreparedStatement pst = con.prepareStatement(sql);
         pst.setString(1, nis);
-        pst.setDate(2, sqlDate);
+        pst.setString(2, tglFormat);
         pst.setString(3, kategori); // Menyimpan teks "Terlambat", "Bolos", dll secara langsung
         pst.setString(4, keterangan);
         
