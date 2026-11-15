@@ -8,8 +8,7 @@ cara jalanin tanpa netbeans
 maka susunan tampilannya akan sebagai berikut:
 
 Dist
-
-  |--lib
-  |--Aplikasi_kesiswaan.jar
-  |--Aplikasi_manajemenData.jar
-  |--dbsekolah.db
+|-lib
+|-Aplikasi_kesiswaan.jar
+|-Aplikasi_manajemenData.jar
+|-dbsekolah.db
