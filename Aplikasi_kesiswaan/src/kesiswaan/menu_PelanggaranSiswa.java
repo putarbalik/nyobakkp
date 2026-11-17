@@ -104,23 +104,27 @@ private String[] daftarKategori = {
         txtcarisiswa.requestFocus();
     }
     
-    protected void kosong(){
-       txtnis.setText("");
-       txtnama.setText("");
-       txtkelas.setText("");
-       txtketerangan.setText("");
-       txtcarisiswa.setText("");
-       tglIinput.setDate(new Date());
-    
+    protected void kosong() {
+    txtnis.setText("");
+    txtnama.setText("");
+    txtkelas.setText("");
+    txtketerangan.setText("");
+    txtcarisiswa.setText("");
+    tglIinput.setDate(new Date());
+
     if (cbkategori.getItemCount() > 0) {
         cbkategori.setSelectedIndex(0);
     }
+    if (cbkelas.getItemCount() > 0) {
+        cbkelas.setSelectedIndex(0);
     }
+}
     
       protected void datatable() {
     String[] baris = {
         "NIS",
         "Nama Siswa",
+        "Kelas",
         "Tanggal",
         "Kategori Pelanggaran",
         "Keterangan"
@@ -136,20 +140,26 @@ private String[] daftarKategori = {
     tblpelanggaran.setModel(tabmode);
 
     String cariitem = txtcarisiswa.getText().trim();
+    String kelasDipilih = (cbkelas.getSelectedItem() != null) ? cbkelas.getSelectedItem().toString() : "Semua Kelas";
+    boolean filterKelas = !kelasDipilih.equals("Semua Kelas");
 
     try {
         String sql = "SELECT "
                 + "p.nis, "
                 + "s.nama_siswa, "
+                + "s.kelas, "
                 + "p.tgl_pelanggaran, "
                 + "p.kategori_pelanggaran, "
                 + "p.keterangan "
                 + "FROM tbl_pelanggaran p "
                 + "JOIN tbl_siswa s ON p.nis = s.nis "
-                + "WHERE p.nis LIKE ? "
-                + "OR s.nama_siswa LIKE ? "
-                + "OR p.kategori_pelanggaran LIKE ? "
-                + "ORDER BY p.tgl_pelanggaran DESC";
+                + "WHERE (p.nis LIKE ? OR s.nama_siswa LIKE ? OR p.kategori_pelanggaran LIKE ?) ";
+
+        if (filterKelas) {
+            sql += "AND s.kelas = ? ";
+        }
+
+        sql += "ORDER BY p.tgl_pelanggaran DESC";
 
         PreparedStatement stat = con.prepareStatement(sql);
 
@@ -157,12 +167,17 @@ private String[] daftarKategori = {
         stat.setString(2, "%" + cariitem + "%");
         stat.setString(3, "%" + cariitem + "%");
 
+        if (filterKelas) {
+            stat.setString(4, kelasDipilih);
+        }
+
         ResultSet hasil = stat.executeQuery();
 
         while (hasil.next()) {
             tabmode.addRow(new Object[]{
                 hasil.getString("nis"),
                 hasil.getString("nama_siswa"),
+                hasil.getString("kelas"),
                 hasil.getString("tgl_pelanggaran"),
                 hasil.getString("kategori_pelanggaran"),
                 hasil.getString("keterangan")
@@ -277,6 +292,8 @@ private void filterKategori(String ketik) {
         jLabel10 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblpelanggaran = new javax.swing.JTable();
+        cbkelas = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
         bbatal = new javax.swing.JButton();
         bsimpan = new javax.swing.JButton();
         brepot = new javax.swing.JButton();
@@ -358,36 +375,36 @@ private void filterKategori(String ketik) {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(tglIinput, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                        .addComponent(tglIinput, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
                         .addGap(7, 7, 7))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
                         .addGap(28, 28, 28)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(2, 2, 2)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE))
+                                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbkategori, 0, 399, Short.MAX_VALUE)
-                                    .addComponent(txtkelas, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))
+                                    .addComponent(cbkategori, 0, 413, Short.MAX_VALUE)
+                                    .addComponent(txtkelas, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
                                 .addGap(5, 5, 5))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(217, 217, 217)
-                                .addComponent(txtnama, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                                .addComponent(txtnama, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
                                 .addGap(8, 8, 8))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(txtnis, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                        .addComponent(txtnis, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(bcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1)))
@@ -446,7 +463,7 @@ private void filterKategori(String ketik) {
         });
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel10.setText("Cari Siswa :");
+        jLabel10.setText("Cari :");
         jLabel10.setToolTipText("");
 
         tblpelanggaran.setModel(new javax.swing.table.DefaultTableModel(
@@ -481,6 +498,17 @@ private void filterKategori(String ketik) {
             tblpelanggaran.getColumnModel().getColumn(3).setResizable(false);
         }
 
+        cbkelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semua Kelas", "VII.A", "VII.B", "VII.C", "VII.D", "VII.E", "VII.F", "VII.G", "VII.H", "VII.I", "VII.J", "VIII.A", "VIII.B", "VIII.C", "VIII.D", "VIII.E", "VIII.F", "VIII.G", "VIII.H", "IX.A", "IX.B", "IX.C", "IX.D", "IX.E", "IX.F", "IX.G" }));
+        cbkelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbkelasActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel11.setText("Kelas :");
+        jLabel11.setToolTipText("");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -489,21 +517,31 @@ private void filterKategori(String ketik) {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtcarisiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
-                        .addGap(124, 124, 124))
+                        .addComponent(txtcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(txtcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(txtcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(cbkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -540,9 +578,9 @@ private void filterKategori(String ketik) {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(brepot, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(bsimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                                .addComponent(bsimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
-                                .addComponent(bbatal, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE))
+                                .addComponent(bbatal, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
                             .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(28, 28, 28)
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -566,7 +604,7 @@ private void filterKategori(String ketik) {
                             .addComponent(bbatal))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(brepot, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(582, Short.MAX_VALUE))))
         );
 
         pack();
@@ -743,21 +781,18 @@ int barisTabel = tblpelanggaran.getRowCount();
     }//GEN-LAST:event_cbkategoriActionPerformed
 
     private void tblpelanggaranMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblpelanggaranMouseClicked
-   int baris = tblpelanggaran.getSelectedRow();
-        
-        // Memastikan ada baris yang valid diklik (mencegah error jika bernilai -1)
-        if (baris != -1) {
-            // Mengambil data Nama Siswa yang berada di kolom kedua (Index 1)
-            String namaSiswa = tblpelanggaran.getValueAt(baris, 1).toString();
-            
-            // Memasukkan teks nama tersebut ke dalam kotak pencarian
-            txtcarisiswa.setText(namaSiswa);
-            
-            // Langsung memicu fungsi pembaruan tabel agar data otomatis tersaring 
-            // hanya untuk siswa tersebut tanpa perlu menekan Enter lagi
-            datatable(); 
-        }
+    int baris = tblpelanggaran.getSelectedRow();
+    if (baris != -1) {
+        String namaSiswa = tblpelanggaran.getValueAt(baris, 1).toString();
+        txtcarisiswa.setText(namaSiswa);
+        cbkelas.setSelectedIndex(0);
+        datatable();
+    }
     }//GEN-LAST:event_tblpelanggaranMouseClicked
+
+    private void cbkelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbkelasActionPerformed
+    datatable();
+    }//GEN-LAST:event_cbkelasActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bbatal;
@@ -766,8 +801,10 @@ int barisTabel = tblpelanggaran.getRowCount();
     private javax.swing.JButton bsimpan;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbkategori;
+    private javax.swing.JComboBox<String> cbkelas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
