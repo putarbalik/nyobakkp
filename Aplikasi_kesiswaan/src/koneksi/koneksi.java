@@ -13,9 +13,9 @@ public class koneksi {
     public static Connection getKoneksi() {
         Connection conn = null;
         try {
-            // Sesuaikan nama file databasemu (pakai .db atau tidak, tergantung aslinya)
-            String url = "jdbc:sqlite:dbsekolah.db"; 
-            conn = DriverManager.getConnection(url);
+            String url = "jdbc:sqlite:dbsekolah.db";
+conn = DriverManager.getConnection(url);
+System.out.println("DB path: " + new java.io.File("dbsekolah.db").getAbsolutePath());
             
             // Tes apakah koneksi berhasil
             if (conn != null) {

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="abc2c306-9f80-41a4-8145-3c990b877f7d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="logo" class="java.io.InputStream">
+		<defaultValueExpression><![CDATA[$P{REPORT_CLASS_LOADER}.getResourceAsStream("logoSekolah.png")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="kelas" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Semua Kelas"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     s."kelas",
+     s."nis",
+     s."nama_siswa",
+     s."jkel",
+     p."tgl_pelanggaran",
+     p."kategori_pelanggaran",
+     p."keterangan"
+FROM
+     "tbl_pelanggaran" p INNER JOIN "tbl_siswa" s ON p."nis" = s."nis"
+WHERE
+     ($P{kelas} = 'Semua Kelas' OR s."kelas" = $P{kelas})
+ORDER BY
+     s."kelas" ASC,
+     s."nama_siswa" ASC,
+     p."tgl_pelanggaran" ASC]]>
+	</queryString>
+	<field name="kelas" class="java.lang.String"/>
+	<field name="nis" class="java.lang.String"/>
+	<field name="nama_siswa" class="java.lang.String"/>
+	<field name="jkel" class="java.lang.String"/>
+	<field name="tgl_pelanggaran" class="java.lang.String"/>
+	<field name="kategori_pelanggaran" class="java.lang.String"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="172" splitType="Stretch">
+			<staticText>
+				<reportElement x="94" y="141" width="376" height="31" uuid="f2591849-ad6f-4826-aaeb-46ed07bff813"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LAPORAN PELANGGARAN BULANAN ]]></text>
+			</staticText>
+			<image>
+				<reportElement x="5" y="-2" width="166" height="109" uuid="4bb34e59-d808-45be-ad71-f632064191b6"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="171" y="11" width="376" height="31" uuid="4b0ed5bd-06d6-49c5-b73b-ed421e7bfa3a"/>
+				<textElement textAlignment="Center">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SMPN 259 JAKARTA ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="171" y="59" width="376" height="31" uuid="6477504e-cf02-43ff-b027-7c682e544ccf"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Jakarta, Jl. Laksamana VIII No.4, RT.15/RW.4, Bambu Apus, Kec. Cipayung, Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta 13890]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="125" width="555" height="3" uuid="ba91739f-3042-448a-8b74-6f7f8d447730"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="31" y="0" width="100" height="20" uuid="a682f9a0-0a19-428f-aa10-9c1de148bad1"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NIS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="131" y="0" width="100" height="20" uuid="63cd06a3-9787-4cdf-ac81-4038998d3db3"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nama Siswa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="331" y="0" width="100" height="20" uuid="7429898f-28cd-42d5-923c-df6c14f966cc"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tanggal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="431" y="0" width="100" height="20" uuid="70ed23fb-24d0-4edb-b9f4-fbd4a8f0b9aa"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kategori]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="231" y="0" width="100" height="20" uuid="ae28563f-1e63-4a5e-a1aa-3c9abf08bf71"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kelas]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="31" y="0" width="100" height="20" uuid="d0e836aa-bacf-4dab-a06a-ed295a69e993"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nis}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="131" y="0" width="100" height="20" uuid="31362531-1ce3-4815-bb44-fdfd497735fc"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nama_siswa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="331" y="0" width="100" height="20" uuid="d2c8ccf8-3119-4bfd-be74-9dbf5786ca4c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tgl_pelanggaran}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="431" y="0" width="100" height="20" uuid="07cc1dc8-74be-41b0-a353-fb1bfa9ce369"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kategori_pelanggaran}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="231" y="0" width="100" height="20" uuid="79b35c64-aa36-4da6-9f39-eb2d27083bc0"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kelas}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="175" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="388" y="29" width="130" height="19" uuid="7796864e-2571-4f0d-afce-267c2a1e3bbf"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="354" y="125" width="177" height="20" uuid="e1fe0a13-ddda-4b83-8468-db46229155c2"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Hesti wahyuni, S.Pd.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="354" y="68" width="177" height="20" uuid="f6a4c38f-6f99-4db1-b69e-bff5d85dc83a"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Kepala Sekolah SMPN 259 Jakarta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="397" y="48" width="100" height="20" uuid="f50d6b71-26a7-47d7-b4e2-0181b4dfaf2b"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Mengetahui]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

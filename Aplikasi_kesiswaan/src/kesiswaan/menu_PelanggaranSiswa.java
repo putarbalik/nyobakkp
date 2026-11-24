@@ -7,6 +7,7 @@ package kesiswaan;
 
 import kesiswaan.*;
 import java.awt.event.KeyEvent;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,8 +18,10 @@ import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import koneksi.koneksi;
+import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 
 /**
@@ -30,6 +33,7 @@ private Connection con;
 private DefaultTableModel tabmode;
 PreparedStatement ps;
 ResultSet rs;
+private String nisTerpilih = "";
 
 private String[] daftarKategori = {
     "Terlambat masuk sekolah",
@@ -93,17 +97,84 @@ private String[] daftarKategori = {
         kosong();
         aktif();
         datatable();
+        brepSiswa.setVisible(false); 
         
     }
     
-    //public void cetak() {
-   
-    //}   
+    private void cetakSiswa(String nis) {
+        try {
+            HashMap<String, Object> param = new HashMap<>();
+            param.put("nis", nis);   // String, sesuai parameter di report
+
+            JasperReport jr = JasperCompileManager.compileReport(
+                "src/report/reportPersiswa.jrxml");
+            param.put(net.sf.jasperreports.engine.JRParameter.REPORT_LOCALE, new java.util.Locale("id", "ID"));
+                InputStream logoStream = getClass().getResourceAsStream("/resource/logoSekolah.png"); 
+            if (logoStream == null) {
+                System.out.println("GAGAL: File gambar tidak ditemukan di resources!");
+            }
+            param.put("logo", logoStream);
+            JasperPrint jp = JasperFillManager.fillReport(jr, param, con);
+            JasperViewer.viewReport(jp, false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal cetak: " + e.getMessage());
+        }
+    }  
     
     protected void aktif(){
         txtcarisiswa.requestFocus();
     }
     
+    private void cetakPerBulan(int bulan, int tahun) {
+        try {
+            HashMap<String, Object> param = new HashMap<>();
+            param.put("bulan", bulan);
+            param.put("tahun", tahun);
+
+            JasperReport jr = JasperCompileManager.compileReport(
+                "src/report/reportPerbulan.jrxml");   // pakai .jrxml, bukan .jasper
+            param.put(net.sf.jasperreports.engine.JRParameter.REPORT_LOCALE, new java.util.Locale("id", "ID"));
+            InputStream logoStream = getClass().getResourceAsStream("/resource/logoSekolah.png"); 
+        if (logoStream == null) {
+            System.out.println("GAGAL: File gambar tidak ditemukan di resources!");
+        }
+        param.put("logo", logoStream);
+            JasperPrint jp = JasperFillManager.fillReport(jr, param, con);
+            JasperViewer.viewReport(jp, false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal cetak: " + e.getMessage());
+        }
+    }
+    
+    
+    private void cetakKelas(String kelas) {
+        try {
+            HashMap<String, Object> param = new HashMap<>();
+            param.put("kelas", kelas);   // String, sesuai parameter di report
+
+            JasperReport jr = JasperCompileManager.compileReport(
+                "src/report/reportPerkelas.jrxml");
+             param.put(net.sf.jasperreports.engine.JRParameter.REPORT_LOCALE, new java.util.Locale("id", "ID"));
+            InputStream logoStream = getClass().getResourceAsStream("/resource/logoSekolah.png"); 
+        if (logoStream == null) {
+            System.out.println("GAGAL: File gambar tidak ditemukan di resources!");
+        }
+        param.put("logo", logoStream);
+            JasperPrint jp = JasperFillManager.fillReport(jr, param, con);
+
+            if (jp.getPages().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Tidak ada data pelanggaran untuk " + kelas);
+                return;
+            }
+
+            JasperViewer.viewReport(jp, false);
+            // Kalau mau langsung dialog printer tanpa preview:
+            // JasperPrintManager.printReport(jp, true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal cetak: " + e.getMessage());
+        }
+    }
     protected void kosong() {
     txtnis.setText("");
     txtnama.setText("");
@@ -296,11 +367,13 @@ private void filterKategori(String ketik) {
         jLabel11 = new javax.swing.JLabel();
         bbatal = new javax.swing.JButton();
         bsimpan = new javax.swing.JButton();
-        brepot = new javax.swing.JButton();
+        brepBulan = new javax.swing.JButton();
+        brepSiswa = new javax.swing.JButton();
+        brepKelas = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(214647, 2147483647));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Input", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 16), new java.awt.Color(2, 2, 2))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Input", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 13), new java.awt.Color(2, 2, 2))); // NOI18N
         jPanel1.setForeground(new java.awt.Color(1, 1, 1));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -542,7 +615,7 @@ private void filterKategori(String ketik) {
                             .addComponent(cbkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         bbatal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -561,8 +634,29 @@ private void filterKategori(String ketik) {
             }
         });
 
-        brepot.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        brepot.setText("CETAK");
+        brepBulan.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        brepBulan.setText("CETAK BULANAN");
+        brepBulan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                brepBulanActionPerformed(evt);
+            }
+        });
+
+        brepSiswa.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        brepSiswa.setText("CETAK LAPORAN SISWA");
+        brepSiswa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                brepSiswaActionPerformed(evt);
+            }
+        });
+
+        brepKelas.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        brepKelas.setText("CETAK PERKELAS");
+        brepKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                brepKelasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -575,14 +669,21 @@ private void filterKategori(String ketik) {
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(41, 41, 41))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(brepot, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(bsimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(brepBulan, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(bsimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(bbatal, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(28, 28, 28))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(brepSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(bbatal, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
-                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(28, 28, 28)
+                                .addComponent(brepKelas, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
         );
@@ -603,8 +704,12 @@ private void filterKategori(String ketik) {
                             .addComponent(bsimpan)
                             .addComponent(bbatal))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(brepot, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(582, Short.MAX_VALUE))))
+                        .addComponent(brepBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(brepSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(brepKelas, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -782,22 +887,77 @@ int barisTabel = tblpelanggaran.getRowCount();
 
     private void tblpelanggaranMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblpelanggaranMouseClicked
     int baris = tblpelanggaran.getSelectedRow();
-    if (baris != -1) {
-        String namaSiswa = tblpelanggaran.getValueAt(baris, 1).toString();
-        txtcarisiswa.setText(namaSiswa);
-        cbkelas.setSelectedIndex(0);
-        datatable();
-    }
+        
+        if (baris != -1) {
+            String nisTerpilih = tblpelanggaran.getValueAt(baris, 0).toString();
+            txtnis.setText(nisTerpilih);
+            
+            brepSiswa.setVisible(true);
+            String namaSiswa = tblpelanggaran.getValueAt(baris, 1).toString();
+            
+            txtcarisiswa.setText(namaSiswa);
+
+            datatable(); 
+        }
     }//GEN-LAST:event_tblpelanggaranMouseClicked
 
     private void cbkelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbkelasActionPerformed
     datatable();
     }//GEN-LAST:event_cbkelasActionPerformed
 
+    private void brepSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brepSiswaActionPerformed
+        String nis = txtnis.getText().trim();
+        if (nis.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Pilih data siswa di tabel dulu.");
+            return;
+        }
+        cetakSiswa(nis);
+        brepSiswa.setVisible(false); 
+    }//GEN-LAST:event_brepSiswaActionPerformed
+
+    private void brepBulanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brepBulanActionPerformed
+        String[] daftarBulan = {
+            "01 - Januari", "02 - Februari", "03 - Maret", "04 - April",
+            "05 - Mei", "06 - Juni", "07 - Juli", "08 - Agustus",
+            "09 - September", "10 - Oktober", "11 - November", "12 - Desember"
+        };
+
+        // Munculkan pop-up dropdown pilihan bulan
+        String bulanTerpilih = (String) JOptionPane.showInputDialog(
+            this,
+            "Pilih Bulan Laporan:",
+            "Cetak Laporan Bulanan",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            daftarBulan,
+            daftarBulan[0]
+        );
+
+        // Jika user menekan OK (tidak klik Cancel)
+        if (bulanTerpilih != null) {
+            // Munculkan pop-up input tahun (default tahun sekarang)
+            String tahunInput = JOptionPane.showInputDialog(this, "Masukkan Tahun (Contoh: 2026):", "2026");
+
+            if (tahunInput != null && !tahunInput.trim().isEmpty()) {
+                int bulan = Integer.parseInt(bulanTerpilih.substring(0, 2)); // Ambil 2 angka depan ("01" -> 1)
+                int tahun = Integer.parseInt(tahunInput.trim());
+
+                cetakPerBulan(bulan, tahun);
+            }
+        }
+    }//GEN-LAST:event_brepBulanActionPerformed
+
+    private void brepKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brepKelasActionPerformed
+        String kelas = cbkelas.getSelectedItem().toString();
+    cetakKelas(kelas);
+    }//GEN-LAST:event_brepKelasActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bbatal;
     private javax.swing.JButton bcarisiswa;
-    private javax.swing.JButton brepot;
+    private javax.swing.JButton brepBulan;
+    private javax.swing.JButton brepKelas;
+    private javax.swing.JButton brepSiswa;
     private javax.swing.JButton bsimpan;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbkategori;
