@@ -50,7 +50,7 @@ ORDER BY p.tgl_pelanggaran]]>
 				</textElement>
 				<text><![CDATA[SMPN 259 JAKARTA ]]></text>
 			</staticText>
-			<image>
+			<image isUsingCache="true">
 				<reportElement x="0" y="14" width="166" height="109" uuid="05eefc39-4475-463b-8c26-2962eec94967"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>

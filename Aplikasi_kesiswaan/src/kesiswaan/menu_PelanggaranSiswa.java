@@ -35,50 +35,6 @@ PreparedStatement ps;
 ResultSet rs;
 private String nisTerpilih = "";
 
-private String[] daftarKategori = {
-    "Terlambat masuk sekolah",
-    "Tidak memakai seragam sesuai jadwal",
-    "Tidak memakai atribut nama murid",
-    "Tidak memakai atribut bendera merah putih",
-    "Tidak memakai topi SMPN 259",
-    "Tidak memakai atribut nama SMPN 259",
-    "Tidak memakai dasi biru",
-    "Tidak memakai dasi pramuka",
-    "Tidak memakai ikat pinggang logo 259",
-    "Tidak memakai kaos kaki putih",
-    "Tidak memakai sepatu NB hitam putih tinggi",
-    "Memakai pakaian ketat",
-    "Memakai perhiasan berlebihan",
-    "Memakai make-up berlebihan",
-    "Mencorat coret seragam/topi/atribut",
-    "Rambut panjang (bagi laki-laki)",
-    "Alis di kerok",
-    "Bertato",
-    "Masuk atau keluar tidak melewati pintu",
-    "Membawa uang dalam jumlah besar atau berlebih",
-    "Mewarnai atau mengecat rambut maupun kuku",
-    "Membuat kegaduhan atau huru-hara",
-    "Membawa atau mengonsumsi permen karet",
-    "Melakukan perjudian di lingkungan sekolah",
-    "Membawa buku/majalah/gambar tidak sopan",
-    "Rokok/vape/ganja/miras",
-    "Perkelahian atau tawuran",
-    "Membawa senjata tajam/api/bahan peledak",
-    "Mengajak orang lain menyelesaikan persoalan",
-    "Meminta sesuatu dari temannya secara paksa",
-    "Menghina atau merugikan nama baik teman",
-    "Bermain bola saat istirahat",
-    "Mengambil atau mencuri barang teman/orang lain",
-    "Membawa motor ke dalam lingkungan sekolah",
-    "Membawa gawai tanpa seizin wali kelas",
-    "Bullying",
-    "Penyalahgunaan di sosial media",
-    "Pelecehan seksual dan kesusilaan",
-    "Pergaulan bebas",
-    "Vandalisme dan perusakan",
-    "Narkotika"
-};
-
     /**
      * Creates new form menu_pelanggaranSiswa
      */
@@ -268,10 +224,10 @@ private String[] daftarKategori = {
         
         private void loadcombo() {
         cbkategori.removeAllItems();
-        cbkategori.addItem("");
-        for (String k : daftarKategori) {
+            cbkategori.addItem("");
+        for (String k : menu_Peraturan.daftarKategori) {
             cbkategori.addItem(k);
-        }
+    }
     }
         
         private void aturAutocomplete() {
@@ -312,7 +268,7 @@ private void filterKategori(String ketik) {
         boolean adaHasil = false;
 
         // Cari kecocokan dari daftarKategori
-        for (String k : daftarKategori) {
+        for (String k : menu_Peraturan.daftarKategori) {
             if (teksPencarian.isEmpty() || k.toLowerCase().contains(teksPencarian)) {
                 model.addElement(k);
                 adaHasil = true;
@@ -373,7 +329,7 @@ private void filterKategori(String ketik) {
 
         setMaximumSize(new java.awt.Dimension(214647, 2147483647));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Input", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 13), new java.awt.Color(2, 2, 2))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Input", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 16), new java.awt.Color(2, 2, 2))); // NOI18N
         jPanel1.setForeground(new java.awt.Color(1, 1, 1));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -437,7 +393,7 @@ private void filterKategori(String ketik) {
         jScrollPane2.setViewportView(txtketerangan);
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel16.setText("NIS                      :");
+        jLabel16.setText("NIS                     :");
         jLabel16.setToolTipText("");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -446,42 +402,39 @@ private void filterKategori(String ketik) {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(tglIinput, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
-                        .addGap(7, 7, 7))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
-                        .addGap(28, 28, 28)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE))
+                                .addComponent(jLabel16)
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbkategori, 0, 413, Short.MAX_VALUE)
-                                    .addComponent(txtkelas, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
-                                .addGap(5, 5, 5))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(217, 217, 217)
-                                .addComponent(txtnama, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
-                                .addGap(8, 8, 8))))
+                                .addComponent(txtnis)))
+                        .addGap(15, 15, 15)
+                        .addComponent(bcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtnis, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(bcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(1, 1, 1)))
-                .addContainerGap())
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbkategori, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtnama)
+                                    .addComponent(txtkelas)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(18, 18, 18)
+                        .addComponent(tglIinput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(2, 2, 2)))
+                .addGap(20, 20, 20))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -518,7 +471,7 @@ private void filterKategori(String ketik) {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Form Input Pelanggaran Siswa");
+        jLabel1.setText("FORM INPUT PELANGGARAN SISWA");
         jLabel1.setToolTipText("");
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Data Pelanggaran", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
@@ -590,13 +543,13 @@ private void filterKategori(String ketik) {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtcarisiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                         .addGap(34, 34, 34)
                         .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cbkelas, 0, 156, Short.MAX_VALUE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
         jPanel2Layout.setVerticalGroup(
@@ -614,8 +567,8 @@ private void filterKategori(String ketik) {
                             .addComponent(jLabel11)
                             .addComponent(cbkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addComponent(jScrollPane3)
+                .addContainerGap())
         );
 
         bbatal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -671,19 +624,16 @@ private void filterKategori(String ketik) {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(brepBulan, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(bsimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(bbatal, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(28, 28, 28))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(brepSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(brepSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
-                                .addComponent(brepKelas, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(brepKelas, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(bsimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(bbatal, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(brepBulan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(28, 28, 28)
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
         );
@@ -693,23 +643,21 @@ private void filterKategori(String ketik) {
                 .addGap(27, 27, 27)
                 .addComponent(jLabel1)
                 .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(556, 556, 556))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(bsimpan)
-                            .addComponent(bbatal))
+                            .addComponent(bsimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bbatal, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(brepBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(brepSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(brepKelas, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(brepKelas, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(596, Short.MAX_VALUE))
         );
 
         pack();
@@ -887,17 +835,34 @@ int barisTabel = tblpelanggaran.getRowCount();
 
     private void tblpelanggaranMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblpelanggaranMouseClicked
     int baris = tblpelanggaran.getSelectedRow();
-        
-        if (baris != -1) {
-            String nisTerpilih = tblpelanggaran.getValueAt(baris, 0).toString();
-            txtnis.setText(nisTerpilih);
-            
-            brepSiswa.setVisible(true);
-            String namaSiswa = tblpelanggaran.getValueAt(baris, 1).toString();
-            
-            txtcarisiswa.setText(namaSiswa);
 
-            datatable(); 
+        if (baris != -1) {
+            String nis = tblpelanggaran.getValueAt(baris, 0).toString();
+            String nama = tblpelanggaran.getValueAt(baris, 1).toString();
+            String kelas = tblpelanggaran.getValueAt(baris, 2).toString();
+            String tgl = tblpelanggaran.getValueAt(baris, 3).toString();
+            String kategori = tblpelanggaran.getValueAt(baris, 4).toString();
+            String keterangan = tblpelanggaran.getValueAt(baris, 5).toString();
+
+            // Masukkan ke semua field di sebelah kiri
+            txtnis.setText(nis);
+            txtnama.setText(nama);
+            txtkelas.setText(kelas);
+            cbkategori.setSelectedItem(kategori);
+            txtketerangan.setText(keterangan);
+
+            // Konversi teks tanggal (yyyy-MM-dd) ke JDateChooser
+            try {
+                java.util.Date date = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(tgl);
+                tglIinput.setDate(date);
+            } catch (Exception e) {
+                System.err.println("Gagal parsing tanggal: " + e.getMessage());
+            }
+
+            // Munculkan tombol cetak laporan per siswa & filter tabel
+            brepSiswa.setVisible(true);
+            txtcarisiswa.setText(nama);
+            datatable();
         }
     }//GEN-LAST:event_tblpelanggaranMouseClicked
 

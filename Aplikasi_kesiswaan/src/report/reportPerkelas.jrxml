@@ -49,7 +49,7 @@ ORDER BY
 				</textElement>
 				<text><![CDATA[LAPORAN PELANGGARAN BULANAN ]]></text>
 			</staticText>
-			<image>
+			<image isUsingCache="true">
 				<reportElement x="5" y="-2" width="166" height="109" uuid="4bb34e59-d808-45be-ad71-f632064191b6"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
