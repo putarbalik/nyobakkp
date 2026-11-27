@@ -57,6 +57,8 @@ private Connection conn; // Biarkan kosong di sini
    
     setFixedIcon(menuguru, "/resource/guru.png");
     setFixedIcon(menusiswa, "/resource/murid.png");
+    setFixedIcon(menuPelanggaranSiswa, "/resource/delete.png");
+    
     
     sethome(home,"/resource/home.png");
     setleave(keluar,"/resource/keluar.png");
@@ -65,6 +67,21 @@ private Connection conn; // Biarkan kosong di sini
     tampilkanHomeAwal();
     }
 
+    private void menuPelanggaranActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        desktop.removeAll();
+        desktop.repaint();
+        
+        menu_PelanggaranSiswa mp = new menu_PelanggaranSiswa();
+        desktop.add(mp);
+        mp.setVisible(true);
+
+        try {
+            mp.setMaximum(true);
+        } catch (java.beans.PropertyVetoException e) {
+            System.err.println("Gagal memaksimalkan Internal Frame: " + e.getMessage());
+        }
+    }
+    
     
     public void validasiMenu() {
     String role = UserSession.getLevel(); 
@@ -292,6 +309,7 @@ private void setadmin(javax.swing.JButton btn, String path) {
         menusiswa = new javax.swing.JButton();
         menuguru = new javax.swing.JButton();
         keluar = new javax.swing.JButton();
+        menuPelanggaranSiswa = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -431,6 +449,18 @@ private void setadmin(javax.swing.JButton btn, String path) {
             }
         });
 
+        menuPelanggaranSiswa.setFont(new java.awt.Font("Segoe UI Symbol", 1, 14)); // NOI18N
+        menuPelanggaranSiswa.setForeground(new java.awt.Color(255, 255, 255));
+        menuPelanggaranSiswa.setText("Pelanggaran");
+        menuPelanggaranSiswa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        menuPelanggaranSiswa.setFocusPainted(false);
+        menuPelanggaranSiswa.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        menuPelanggaranSiswa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuPelanggaranSiswaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -440,16 +470,19 @@ private void setadmin(javax.swing.JButton btn, String path) {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(menusiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(menuguru, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(keluar, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
+                    .addComponent(keluar, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                    .addComponent(menuPelanggaranSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(menusiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(menuguru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 275, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(menuPelanggaranSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 198, Short.MAX_VALUE)
                 .addComponent(keluar)
                 .addContainerGap())
         );
@@ -550,6 +583,21 @@ private void setadmin(javax.swing.JButton btn, String path) {
     user.setVisible(true);
     }//GEN-LAST:event_adminActionPerformed
 
+    private void menuPelanggaranSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPelanggaranSiswaActionPerformed
+        desktop.removeAll();
+        desktop.repaint();
+        
+        menu_PelanggaranSiswa mp = new menu_PelanggaranSiswa();
+        desktop.add(mp);
+        mp.setVisible(true);
+
+        try {
+            mp.setMaximum(true);
+        } catch (java.beans.PropertyVetoException e) {
+            System.err.println("Gagal memaksimalkan Internal Frame: " + e.getMessage());
+        }
+    }//GEN-LAST:event_menuPelanggaranSiswaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -578,6 +626,7 @@ private void setadmin(javax.swing.JButton btn, String path) {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JButton keluar;
     private javax.swing.JLabel lbl_logo;
+    private javax.swing.JButton menuPelanggaranSiswa;
     private javax.swing.JButton menuguru;
     private javax.swing.JButton menusiswa;
     // End of variables declaration//GEN-END:variables

@@ -1,0 +1,941 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package pengaturandatabase;
+
+import pengaturandatabase.*;
+import java.awt.event.KeyEvent;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Date;
+import java.util.HashMap;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import koneksi.koneksi;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
+
+/**
+ *
+ * @author ACER
+ */
+public class menu_PelanggaranSiswa extends javax.swing.JInternalFrame {
+private Connection con;
+private DefaultTableModel tabmode;
+PreparedStatement ps;
+ResultSet rs;
+private String nisTerpilih = "";
+
+private String[] daftarKategori = {
+    "Terlambat masuk sekolah",
+    "Tidak memakai seragam sesuai jadwal",
+    "Tidak memakai atribut nama murid",
+    "Tidak memakai atribut bendera merah putih",
+    "Tidak memakai topi SMPN 259",
+    "Tidak memakai atribut nama SMPN 259",
+    "Tidak memakai dasi biru",
+    "Tidak memakai dasi pramuka",
+    "Tidak memakai ikat pinggang logo 259",
+    "Tidak memakai kaos kaki putih",
+    "Tidak memakai sepatu NB hitam putih tinggi",
+    "Memakai pakaian ketat",
+    "Memakai perhiasan berlebihan",
+    "Memakai make-up berlebihan",
+    "Mencorat coret seragam/topi/atribut",
+    "Rambut panjang (bagi laki-laki)",
+    "Alis di kerok",
+    "Bertato",
+    "Masuk atau keluar tidak melewati pintu",
+    "Membawa uang dalam jumlah besar atau berlebih",
+    "Mewarnai atau mengecat rambut maupun kuku",
+    "Membuat kegaduhan atau huru-hara",
+    "Membawa atau mengonsumsi permen karet",
+    "Melakukan perjudian di lingkungan sekolah",
+    "Membawa buku/majalah/gambar tidak sopan",
+    "Rokok/vape/ganja/miras",
+    "Perkelahian atau tawuran",
+    "Membawa senjata tajam/api/bahan peledak",
+    "Mengajak orang lain menyelesaikan persoalan",
+    "Meminta sesuatu dari temannya secara paksa",
+    "Menghina atau merugikan nama baik teman",
+    "Bermain bola saat istirahat",
+    "Mengambil atau mencuri barang teman/orang lain",
+    "Membawa motor ke dalam lingkungan sekolah",
+    "Membawa gawai tanpa seizin wali kelas",
+    "Bullying",
+    "Penyalahgunaan di sosial media",
+    "Pelecehan seksual dan kesusilaan",
+    "Pergaulan bebas",
+    "Vandalisme dan perusakan",
+    "Narkotika"
+};
+
+    /**
+     * Creates new form menu_pelanggaranSiswa
+     */
+    public menu_PelanggaranSiswa() {
+        initComponents();
+        con = new koneksi().getKoneksi();
+        javax.swing.plaf.basic.BasicInternalFrameUI ui = (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+    ui.setNorthPane(null);
+        // Bungkus seluruh isi form dengan scroll pane
+    javax.swing.JScrollPane scrollUtama = new javax.swing.JScrollPane(getContentPane());
+    scrollUtama.setBorder(null);
+    scrollUtama.getVerticalScrollBar().setUnitIncrement(16);
+    setContentPane(scrollUtama);
+        loadcombo();
+        aturAutocomplete();
+        kosong();
+        aktif();
+        datatable();
+        
+    }
+    
+    private void cetakSiswa(String nis) {
+        try {
+            HashMap<String, Object> param = new HashMap<>();
+            param.put("nis", nis);   // String, sesuai parameter di report
+
+            JasperReport jr = JasperCompileManager.compileReport(
+                "src/report/reportPersiswa.jrxml");
+            param.put(net.sf.jasperreports.engine.JRParameter.REPORT_LOCALE, new java.util.Locale("id", "ID"));
+                InputStream logoStream = getClass().getResourceAsStream("/resource/logoSekolah.png"); 
+            if (logoStream == null) {
+                System.out.println("GAGAL: File gambar tidak ditemukan di resources!");
+            }
+            param.put("logo", logoStream);
+            JasperPrint jp = JasperFillManager.fillReport(jr, param, con);
+            JasperViewer.viewReport(jp, false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal cetak: " + e.getMessage());
+        }
+    }  
+    
+    protected void aktif(){
+        txtcarisiswa.requestFocus();
+    }
+    
+    private void cetakPerBulan(int bulan, int tahun) {
+        try {
+            HashMap<String, Object> param = new HashMap<>();
+            param.put("bulan", bulan);
+            param.put("tahun", tahun);
+
+            JasperReport jr = JasperCompileManager.compileReport(
+                "src/report/reportPerbulan.jrxml");   // pakai .jrxml, bukan .jasper
+            param.put(net.sf.jasperreports.engine.JRParameter.REPORT_LOCALE, new java.util.Locale("id", "ID"));
+            InputStream logoStream = getClass().getResourceAsStream("/resource/logoSekolah.png"); 
+        if (logoStream == null) {
+            System.out.println("GAGAL: File gambar tidak ditemukan di resources!");
+        }
+        param.put("logo", logoStream);
+            JasperPrint jp = JasperFillManager.fillReport(jr, param, con);
+            JasperViewer.viewReport(jp, false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal cetak: " + e.getMessage());
+        }
+    }
+    
+    
+    private void cetakKelas(String kelas) {
+        try {
+            HashMap<String, Object> param = new HashMap<>();
+            param.put("kelas", kelas);   // String, sesuai parameter di report
+
+            JasperReport jr = JasperCompileManager.compileReport(
+                "src/report/reportPerkelas.jrxml");
+             param.put(net.sf.jasperreports.engine.JRParameter.REPORT_LOCALE, new java.util.Locale("id", "ID"));
+            InputStream logoStream = getClass().getResourceAsStream("/resource/logoSekolah.png"); 
+        if (logoStream == null) {
+            System.out.println("GAGAL: File gambar tidak ditemukan di resources!");
+        }
+        param.put("logo", logoStream);
+            JasperPrint jp = JasperFillManager.fillReport(jr, param, con);
+
+            if (jp.getPages().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Tidak ada data pelanggaran untuk " + kelas);
+                return;
+            }
+
+            JasperViewer.viewReport(jp, false);
+            // Kalau mau langsung dialog printer tanpa preview:
+            // JasperPrintManager.printReport(jp, true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal cetak: " + e.getMessage());
+        }
+    }
+    protected void kosong() {
+    txtnis.setText("");
+    txtnama.setText("");
+    txtkelas.setText("");
+    txtketerangan.setText("");
+    txtcarisiswa.setText("");
+    tglIinput.setDate(new Date());
+
+    if (cbkategori.getItemCount() > 0) {
+        cbkategori.setSelectedIndex(0);
+    }
+    if (cbkelas.getItemCount() > 0) {
+        cbkelas.setSelectedIndex(0);
+    }
+}
+    
+      protected void datatable() {
+    String[] baris = {
+        "NIS",
+        "Nama Siswa",
+        "Kelas",
+        "Tanggal",
+        "Kategori Pelanggaran",
+        "Keterangan"
+    };
+
+    tabmode = new DefaultTableModel(null, baris) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
+    tblpelanggaran.setModel(tabmode);
+
+    String cariitem = txtcarisiswa.getText().trim();
+    String kelasDipilih = (cbkelas.getSelectedItem() != null) ? cbkelas.getSelectedItem().toString() : "Semua Kelas";
+    boolean filterKelas = !kelasDipilih.equals("Semua Kelas");
+
+    try {
+        String sql = "SELECT "
+                + "p.nis, "
+                + "s.nama_siswa, "
+                + "s.kelas, "
+                + "p.tgl_pelanggaran, "
+                + "p.kategori_pelanggaran, "
+                + "p.keterangan "
+                + "FROM tbl_pelanggaran p "
+                + "JOIN tbl_siswa s ON p.nis = s.nis "
+                + "WHERE (p.nis LIKE ? OR s.nama_siswa LIKE ? OR p.kategori_pelanggaran LIKE ?) ";
+
+        if (filterKelas) {
+            sql += "AND s.kelas = ? ";
+        }
+
+        sql += "ORDER BY p.tgl_pelanggaran DESC";
+
+        PreparedStatement stat = con.prepareStatement(sql);
+
+        stat.setString(1, "%" + cariitem + "%");
+        stat.setString(2, "%" + cariitem + "%");
+        stat.setString(3, "%" + cariitem + "%");
+
+        if (filterKelas) {
+            stat.setString(4, kelasDipilih);
+        }
+
+        ResultSet hasil = stat.executeQuery();
+
+        while (hasil.next()) {
+            tabmode.addRow(new Object[]{
+                hasil.getString("nis"),
+                hasil.getString("nama_siswa"),
+                hasil.getString("kelas"),
+                hasil.getString("tgl_pelanggaran"),
+                hasil.getString("kategori_pelanggaran"),
+                hasil.getString("keterangan")
+            });
+        }
+
+        hasil.close();
+        stat.close();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Data pelanggaran gagal dipanggil: " + e.getMessage()
+        );
+    }
+}
+        
+        private void loadcombo() {
+        cbkategori.removeAllItems();
+        cbkategori.addItem("");
+        for (String k : daftarKategori) {
+            cbkategori.addItem(k);
+        }
+    }
+        
+        private void aturAutocomplete() {
+    // Mendapatkan komponen teks di dalam JComboBox
+    final javax.swing.JTextField editor = 
+        (javax.swing.JTextField) cbkategori.getEditor().getEditorComponent();
+
+    editor.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyReleased(java.awt.event.KeyEvent evt) {
+            // Ambil tombol yang ditekan
+            int keyCode = evt.getKeyCode();
+
+            // Abaikan tombol panah, enter, dan shift agar navigasi tidak terganggu
+            if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_DOWN 
+                || keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SHIFT) {
+                return;
+            }
+
+            // Jalankan filter
+            filterKategori(editor.getText());
+        }
+    });
+}
+
+private void filterKategori(String ketik) {
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        String teksPencarian = ketik.toLowerCase().trim();
+        javax.swing.DefaultComboBoxModel<String> model = 
+            (javax.swing.DefaultComboBoxModel<String>) cbkategori.getModel();
+
+        // Kosongkan model saat ini
+        model.removeAllElements();
+        
+        // Selalu tambahkan opsi default di paling atas
+        model.addElement("-- Pilih Kategori --");
+
+        boolean adaHasil = false;
+
+        // Cari kecocokan dari daftarKategori
+        for (String k : daftarKategori) {
+            if (teksPencarian.isEmpty() || k.toLowerCase().contains(teksPencarian)) {
+                model.addElement(k);
+                adaHasil = true;
+            }
+        }
+
+        // Kembalikan teks yang sedang diketik user agar tidak terhapus
+        javax.swing.JTextField editor = 
+            (javax.swing.JTextField) cbkategori.getEditor().getEditorComponent();
+        editor.setText(ketik);
+
+        // Jika ada hasil dan user sedang mengetik, buka pop-up dropdown-nya
+        if (adaHasil && !ketik.isEmpty()) {
+            cbkategori.showPopup();
+        } else if (ketik.isEmpty()) {
+            cbkategori.hidePopup();
+        }
+    });
+}
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jPanel1 = new javax.swing.JPanel();
+        tglIinput = new com.toedter.calendar.JDateChooser();
+        jLabel9 = new javax.swing.JLabel();
+        txtnis = new javax.swing.JTextField();
+        bcarisiswa = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        txtnama = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        txtkelas = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        cbkategori = new javax.swing.JComboBox<>();
+        jLabel15 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtketerangan = new javax.swing.JTextArea();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        txtcarisiswa = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblpelanggaran = new javax.swing.JTable();
+        cbkelas = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        bbatal = new javax.swing.JButton();
+        bsimpan = new javax.swing.JButton();
+        bhapus = new javax.swing.JButton();
+
+        setMaximumSize(new java.awt.Dimension(214647, 2147483647));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Input", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 16), new java.awt.Color(2, 2, 2))); // NOI18N
+        jPanel1.setForeground(new java.awt.Color(1, 1, 1));
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel9.setText("TANGGAL           :");
+        jLabel9.setToolTipText("");
+
+        txtnis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtnisActionPerformed(evt);
+            }
+        });
+
+        bcarisiswa.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        bcarisiswa.setText("CARI");
+        bcarisiswa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bcarisiswaActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel12.setText("NAMA                :");
+        jLabel12.setToolTipText("");
+
+        txtnama.setEditable(false);
+        txtnama.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtnamaActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel13.setText("KELAS                 :");
+        jLabel13.setToolTipText("");
+
+        txtkelas.setEditable(false);
+        txtkelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtkelasActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel14.setText("KATEGORI          :");
+        jLabel14.setToolTipText("");
+
+        cbkategori.setEditable(true);
+        cbkategori.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cbkategori.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbkategoriActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel15.setText("KETERANGAN    :");
+        jLabel15.setToolTipText("");
+
+        txtketerangan.setColumns(20);
+        txtketerangan.setRows(5);
+        jScrollPane2.setViewportView(txtketerangan);
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel16.setText("NIS                     :");
+        jLabel16.setToolTipText("");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel16)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtnis)))
+                        .addGap(15, 15, 15)
+                        .addComponent(bcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbkategori, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtnama)
+                                    .addComponent(txtkelas)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(18, 18, 18)
+                        .addComponent(tglIinput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(2, 2, 2)))
+                .addGap(20, 20, 20))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(txtnis, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtnama, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(tglIinput, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbkategori, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel15)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(40, Short.MAX_VALUE))
+        );
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("FORM INPUT PELANGGARAN SISWA");
+        jLabel1.setToolTipText("");
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Panel Data Pelanggaran", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+        txtcarisiswa.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        txtcarisiswa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtcarisiswaActionPerformed(evt);
+            }
+        });
+        txtcarisiswa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtcarisiswaKeyPressed(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel10.setText("Cari :");
+        jLabel10.setToolTipText("");
+
+        tblpelanggaran.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblpelanggaran.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblpelanggaranMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tblpelanggaran);
+        if (tblpelanggaran.getColumnModel().getColumnCount() > 0) {
+            tblpelanggaran.getColumnModel().getColumn(0).setResizable(false);
+            tblpelanggaran.getColumnModel().getColumn(1).setResizable(false);
+            tblpelanggaran.getColumnModel().getColumn(2).setResizable(false);
+            tblpelanggaran.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        cbkelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semua Kelas", "VII.A", "VII.B", "VII.C", "VII.D", "VII.E", "VII.F", "VII.G", "VII.H", "VII.I", "VII.J", "VIII.A", "VIII.B", "VIII.C", "VIII.D", "VIII.E", "VIII.F", "VIII.G", "VIII.H", "IX.A", "IX.B", "IX.C", "IX.D", "IX.E", "IX.F", "IX.G" }));
+        cbkelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbkelasActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel11.setText("Kelas :");
+        jLabel11.setToolTipText("");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtcarisiswa, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                        .addGap(34, 34, 34)
+                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbkelas, 0, 156, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(txtcarisiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(cbkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        bbatal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        bbatal.setText("BATAL");
+        bbatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bbatalActionPerformed(evt);
+            }
+        });
+
+        bsimpan.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        bsimpan.setText("SIMPAN");
+        bsimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bsimpanActionPerformed(evt);
+            }
+        });
+
+        bhapus.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        bhapus.setText("HAPUS");
+        bhapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bhapusActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(41, 41, 41))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(bsimpan, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(bbatal, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(bhapus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(28, 28, 28)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(jLabel1)
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(bsimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bbatal, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bhapus, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(600, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void txtcarisiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcarisiswaActionPerformed
+int barisTabel = tblpelanggaran.getRowCount();
+        
+        if (barisTabel == 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Tabel kosong! Cari nama atau NIS siswa terlebih dahulu.", "Info", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Mengambil Index 1 (Nama Siswa) untuk dijadikan Judul Pop-up
+        String namaSiswa = tblpelanggaran.getValueAt(0, 1).toString();
+
+        java.util.HashMap<String, Integer> rekap = new java.util.HashMap<>();
+
+        for (int i = 0; i < barisTabel; i++) {
+            // Mengambil Index 3 (Kategori) untuk dihitung
+            String kategori = tblpelanggaran.getValueAt(i, 3).toString();
+            
+            rekap.put(kategori, rekap.getOrDefault(kategori, 0) + 1);
+        }
+
+        StringBuilder teksRiwayat = new StringBuilder();
+        teksRiwayat.append("Rekap Pelanggaran : ").append(namaSiswa).append("\n");
+        teksRiwayat.append("--------------------------------------------------\n");
+
+        for (java.util.Map.Entry<String, Integer> entry : rekap.entrySet()) {
+            teksRiwayat.append("• ").append(entry.getKey()).append(" : ")
+                       .append(entry.getValue()).append(" kali\n");
+        }
+
+        javax.swing.JOptionPane.showMessageDialog(this, teksRiwayat.toString(), "Riwayat Siswa", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_txtcarisiswaActionPerformed
+
+    private void bsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bsimpanActionPerformed
+  // Validasi input
+    String nis = txtnis.getText().trim();
+    String nama = txtnama.getText().trim();
+    Object item = cbkategori.getSelectedItem();
+    String kategori = (item == null) ? "" : item.toString().trim();
+    String keterangan = txtketerangan.getText().trim();
+    
+    if (nis.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Masukkan NIS terlebih dahulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    if (nama.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Data siswa belum ditemukan. Klik tombol CARI.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    if (tglIinput.getDate() == null) {
+        JOptionPane.showMessageDialog(this, "Pilih tanggal pelanggaran terlebih dahulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    if (kategori.isEmpty() || kategori.equals("-- Pilih Kategori --")) {
+        JOptionPane.showMessageDialog(this, "Pilih kategori pelanggaran!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    if (keterangan.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Keterangan pelanggaran harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Konversi tanggal kalender JDateChooser ke teks YYYY-MM-DD
+    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+    String tglFormat = sdf.format(tglIinput.getDate());
+    int konfirmasi = JOptionPane.showConfirmDialog(this, 
+            "Apakah Anda yakin data pelanggaran sudah benar dan ingin disimpan?", 
+            "Konfirmasi Simpan", 
+            JOptionPane.YES_NO_OPTION, 
+            JOptionPane.QUESTION_MESSAGE);
+            
+    if (konfirmasi != JOptionPane.YES_OPTION) {
+        return; 
+    }
+
+    try {
+        // SQL Baru: Insert langsung teks kategori tanpa mencari id_kategori
+        String sql = "INSERT INTO tbl_pelanggaran "
+                   + "(nis, tgl_pelanggaran, kategori_pelanggaran, keterangan) "
+                   + "VALUES (?, ?, ?, ?)";
+        
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, nis);
+        pst.setString(2, tglFormat);
+        pst.setString(3, kategori); // Menyimpan teks "Terlambat", "Bolos", dll secara langsung
+        pst.setString(4, keterangan);
+        
+        pst.executeUpdate();
+        
+        JOptionPane.showMessageDialog(this, "Data pelanggaran berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+        
+        kosong();     
+        datatable();  
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Gagal menyimpan data pelanggaran:\n" + e.getMessage(), "Error Database", JOptionPane.ERROR_MESSAGE);
+    }
+// TODO add your handling code here:
+    }//GEN-LAST:event_bsimpanActionPerformed
+
+    private void bbatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bbatalActionPerformed
+
+    int konfirmasi = JOptionPane.showConfirmDialog(this, 
+            "Batal melakukan input pelanggaran? Semua isian dan centang akan dikosongkan.", 
+            "Konfirmasi Batal", 
+            JOptionPane.YES_NO_OPTION, 
+            JOptionPane.QUESTION_MESSAGE);
+            
+    if (konfirmasi == JOptionPane.YES_OPTION) {
+        kosong();     
+        datatable();  
+        
+        JOptionPane.showMessageDialog(this, "Form berhasil dibersihkan.", "Batal", JOptionPane.INFORMATION_MESSAGE);
+    }        // TODO add your handling code here:
+    }//GEN-LAST:event_bbatalActionPerformed
+
+    private void txtcarisiswaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcarisiswaKeyPressed
+        datatable();        // TODO add your handling code here:
+    }//GEN-LAST:event_txtcarisiswaKeyPressed
+
+    private void bcarisiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bcarisiswaActionPerformed
+         String nis = txtnis.getText().trim();
+    
+    if (nis.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Masukkan NISN terlebih dahulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    try {
+        // Mengambil data langsung dari 1 tabel (tbl_siswa)
+        String sql = "SELECT nama_siswa, kelas FROM tbl_siswa WHERE nis = ?";
+        
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, nis);
+        ResultSet rs = pst.executeQuery();
+        
+        if (rs.next()) {
+            // Pastikan nama kolom di getString() sama dengan yang ada di SELECT
+            txtnama.setText(rs.getString("nama_siswa"));
+            txtkelas.setText(rs.getString("kelas"));
+        } else {
+            JOptionPane.showMessageDialog(this, "Siswa dengan NISN " + nis + " tidak ditemukan", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            txtnama.setText("");
+            txtkelas.setText("");
+        }
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Gagal mencari siswa: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_bcarisiswaActionPerformed
+
+    private void txtnisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnisActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtnisActionPerformed
+
+    private void txtkelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtkelasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtkelasActionPerformed
+
+    private void txtnamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnamaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtnamaActionPerformed
+
+    private void cbkategoriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbkategoriActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbkategoriActionPerformed
+
+    private void tblpelanggaranMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblpelanggaranMouseClicked
+        int baris = tblpelanggaran.getSelectedRow();
+        if (baris != -1) {
+            txtnis.setText(tblpelanggaran.getValueAt(baris, 0).toString());
+            txtnama.setText(tblpelanggaran.getValueAt(baris, 1).toString());
+            txtkelas.setText(tblpelanggaran.getValueAt(baris, 2).toString());
+            cbkategori.setSelectedItem(tblpelanggaran.getValueAt(baris, 4).toString());
+            txtketerangan.setText(tblpelanggaran.getValueAt(baris, 5).toString());
+        }
+    }//GEN-LAST:event_tblpelanggaranMouseClicked
+
+    private void cbkelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbkelasActionPerformed
+    datatable();
+    }//GEN-LAST:event_cbkelasActionPerformed
+
+    private void bhapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bhapusActionPerformed
+        int baris = tblpelanggaran.getSelectedRow();
+        if (baris == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data pelanggaran di tabel yang ingin dihapus terlebih dahulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String nis = tblpelanggaran.getValueAt(baris, 0).toString();
+        String nama = tblpelanggaran.getValueAt(baris, 1).toString();
+        String tgl = tblpelanggaran.getValueAt(baris, 3).toString();
+        String kategori = tblpelanggaran.getValueAt(baris, 4).toString();
+        String keterangan = tblpelanggaran.getValueAt(baris, 5).toString();
+
+        int konfirmasi = JOptionPane.showConfirmDialog(this,
+                "Yakin ingin menghapus data pelanggaran milik " + nama + " (" + kategori + ")?",
+                "Konfirmasi Hapus",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            // Menggunakan rowid khas SQLite agar hanya menghapus 1 baris yang dipilih
+            String sql = "DELETE FROM tbl_pelanggaran WHERE rowid = ("
+                       + "SELECT rowid FROM tbl_pelanggaran "
+                       + "WHERE nis = ? AND tgl_pelanggaran = ? AND kategori_pelanggaran = ? AND keterangan = ? LIMIT 1)";
+            try (PreparedStatement pst = con.prepareStatement(sql)) {
+                pst.setString(1, nis);
+                pst.setString(2, tgl);
+                pst.setString(3, kategori);
+                pst.setString(4, keterangan);
+
+                int terhapus = pst.executeUpdate();
+                if (terhapus > 0) {
+                    JOptionPane.showMessageDialog(this, "Data pelanggaran berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                    kosong();
+                    datatable();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Data tidak ditemukan di database.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Gagal menghapus data pelanggaran:\n" + e.getMessage(), "Error Database", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_bhapusActionPerformed
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bbatal;
+    private javax.swing.JButton bcarisiswa;
+    private javax.swing.JButton bhapus;
+    private javax.swing.JButton bsimpan;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox<String> cbkategori;
+    private javax.swing.JComboBox<String> cbkelas;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable tblpelanggaran;
+    private com.toedter.calendar.JDateChooser tglIinput;
+    private javax.swing.JTextField txtcarisiswa;
+    private javax.swing.JTextField txtkelas;
+    private javax.swing.JTextArea txtketerangan;
+    private javax.swing.JTextField txtnama;
+    private javax.swing.JTextField txtnis;
+    // End of variables declaration//GEN-END:variables
+}

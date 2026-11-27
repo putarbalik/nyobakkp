@@ -452,82 +452,40 @@ public class menu_siswa extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_bcariActionPerformed
 
     private void bsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bsimpanActionPerformed
-     // 1. Membuka Jendela Pemilihan File (File Chooser)
-        javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
-        fileChooser.setDialogTitle("Pilih File CSV Data Siswa");
-        
-        // Filter agar hanya file .csv yang bisa dipilih
-        javax.swing.filechooser.FileNameExtensionFilter filter = new javax.swing.filechooser.FileNameExtensionFilter("File CSV (*.csv)", "csv");
-        fileChooser.setFileFilter(filter);
+     // 1. Validasi agar tidak ada input yang kosong
+        if (txtnis.getText().trim().isEmpty() || txtnm.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "NIS dan Nama Siswa tidak boleh kosong!");
+            return;
+        }
+        if (cbkls.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(null, "Silakan pilih kelas terlebih dahulu!");
+            return;
+        }
 
-        // Menangkap respon user (apakah klik Open atau Cancel)
-        int userSelection = fileChooser.showOpenDialog(this);
+        // 2. Proses simpan ke database SQLite
+        String sql = "INSERT INTO tbl_siswa (nis, nama_siswa, jkel, kelas) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stat = con.prepareStatement(sql)) {
+            stat.setString(1, txtnis.getText().trim());
+            stat.setString(2, txtnm.getText().trim());
 
-        if (userSelection == javax.swing.JFileChooser.APPROVE_OPTION) {
-            java.io.File fileToRead = fileChooser.getSelectedFile();
-            
-            // 2. Membaca isi file menggunakan BufferedReader
-            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(fileToRead))) {
-                String line;
-                
-                // Gunakan INSERT OR IGNORE khas SQLite agar NIS kembar dilewati
-                String sql = "INSERT OR IGNORE INTO tbl_siswa (nis, nama_siswa, jkel, kelas) VALUES (?, ?, ?, ?)";
-                java.sql.PreparedStatement stat = con.prepareStatement(sql);
-                
-                // --- FITUR TRANSAKSI: MATIKAN AUTO-COMMIT AGAR TIDAK MENGUNCI DATABASE ---
-                con.setAutoCommit(false);
-                
-                int count = 0;
-                boolean isFirstLine = true; 
-                
-                // Looping untuk membaca file baris demi baris
-                while ((line = br.readLine()) != null) {
-                    // Lewati baris pertama jika CSV Anda memiliki Header (misal: "NIS,Nama,JK,Kelas")
-                    if (isFirstLine) {
-                        isFirstLine = false;
-                        continue;
-                    }
-                    
-                    // Pisahkan teks berdasarkan koma (,) atau titik koma (;) - sesuaikan dengan CSV Anda
-                    String[] data = line.split("[,;]"); 
-                    
-                    // Pastikan baris memiliki 4 kolom untuk menghindari ArrayOutOfBoundsException
-                    if (data.length >= 4) { 
-                        stat.setString(1, data[0].trim()); // NIS
-                        stat.setString(2, data[1].trim()); // Nama
-                        stat.setString(3, data[2].trim()); // Jkel (L/P) 
-                        stat.setString(4, data[3].trim()); // Kelas
-                        
-                        // Masukkan query ke dalam antrian eksekusi (Batch)
-                        stat.addBatch(); 
-                        count++;
-                    }
-                }
-                
-                // 3. Eksekusi semua antrian SQL sekaligus ke database (HANYA 1 KALI PROSES)
-                stat.executeBatch(); 
-                
-                // --- SIMPAN PERMANEN LALU NYALAKAN LAGI AUTO-COMMIT ---
-                con.commit();
-                con.setAutoCommit(true);
-                stat.close();
-                
-                javax.swing.JOptionPane.showMessageDialog(null, "Berhasil mengimpor " + count + " data siswa baru!");
-                
-                // 4. Refresh tampilan tabel GUI agar data langsung muncul
-                kosong();
-                datatable(); 
-                
-            } catch (Exception e) {
-                // Jika terjadi error (misal format salah), kembalikan status auto-commit agar tidak error berantai
-                try {
-                    if (con != null) {
-                        con.setAutoCommit(true);
-                    }
-                } catch (java.sql.SQLException ex) {
-                    System.err.println("Gagal reset auto-commit: " + ex.getMessage());
-                }
-                javax.swing.JOptionPane.showMessageDialog(null, "Gagal import data: " + e.getMessage());
+            String jk = cbjk.getSelectedItem().toString();
+            stat.setString(3, jk.equals("Laki - Laki") ? "L" : "P");
+
+            stat.setString(4, cbkls.getSelectedItem().toString());
+
+            stat.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Data siswa berhasil disimpan!");
+
+            // 3. Bersihkan form dan refresh tabel
+            kosong();
+            aktif();
+            datatable();
+
+        } catch (SQLException e) {
+            if (e.getMessage().contains("UNIQUE") || e.getMessage().contains("PRIMARY KEY")) {
+                JOptionPane.showMessageDialog(null, "Gagal simpan: NIS sudah terdaftar!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Gagal simpan data: " + e.getMessage());
             }
         }
     }//GEN-LAST:event_bsimpanActionPerformed
